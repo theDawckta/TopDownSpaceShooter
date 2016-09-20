@@ -48,13 +48,12 @@ public class PlayerController : MonoBehaviour
         }
 
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,
-                                                                         Input.mousePosition.y,
-                                                                         1.0f));
-
-        Quaternion rotate = Quaternion.LookRotation(mousePosition - transform.position, -Vector3.forward);
+                                                                           Input.mousePosition.y,
+                                                                          -Camera.main.transform.position.z));
+	
+		Quaternion rotate = Quaternion.FromToRotation(Vector3.up, mousePosition - transform.position);
         transform.localRotation = Quaternion.RotateTowards(transform.localRotation, rotate, TurnSpeed);
-        transform.Rotate(Quaternion.ToEulerAngles(rotate) * TurnSpeed * Time.deltaTime);
-        transform.localEulerAngles = new Vector3(0.0f, 0.0f, transform.localEulerAngles.z);
+		transform.localEulerAngles = new Vector3(0.0f, 0.0f, transform.localEulerAngles.z);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
