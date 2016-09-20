@@ -39,11 +39,11 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetAxisRaw("Horizontal") > 0)
         {
-            transform.Rotate(Vector3.forward * (Time.deltaTime * RotateSpeed));
+            transform.Rotate(-Vector3.forward * (Time.deltaTime * RotateSpeed));
         }
         else if (Input.GetAxisRaw("Horizontal") < 0)
         {
-            transform.Rotate(-Vector3.forward * (Time.deltaTime * RotateSpeed));
+            transform.Rotate(Vector3.forward * (Time.deltaTime * RotateSpeed));
         }
     }
 
