@@ -14,7 +14,6 @@ public class EnemySpawnController : MonoBehaviour
 
     private System.Random random = new System.Random(System.DateTime.Now.Ticks.GetHashCode());
     private bool spawning = false;
-    private int enemyCount;
     private List<EnemyController> enemies = new List<EnemyController>();
 
     void Start()
@@ -28,15 +27,15 @@ public class EnemySpawnController : MonoBehaviour
         {
             StartCoroutine("SpawnTimer");
         }
-    }
 
-    void FixedUpdate()
-    {
         for (int i = 0; i < enemies.Count; i++)
         {
-            if ((enemies[i].transform.position - enemies[i].Player.transform.position).magnitude > EnemyRange)
+            if ((enemies[i].transform.position - enemies[i].Player.transform.position).magnitude > EnemyRange || enemies[i].Alive == false)
             {
-                Destroy(gameObject);
+
+                Destroy(enemies[i].gameObject);
+                enemies.Remove(enemies[i]);
+                
             }
         }
     }
@@ -47,7 +46,6 @@ public class EnemySpawnController : MonoBehaviour
         float dist = GetRandomNumber(SpawnAreaMin, SpawnAreaMax);
         
         spawning = true;
-        enemyCount = enemyCount + 1;
 
         EnemyController enemy = Instantiate<EnemyController>(Enemy, Player.transform.position, Quaternion.Euler(new Vector3(0.0f, 0.0f, angle)));
         enemy.transform.parent = transform.root;

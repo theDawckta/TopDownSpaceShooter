@@ -11,9 +11,14 @@ public class BackgroundController : MonoBehaviour
 
 	void Start () 
     {
+        float height = 2f * Camera.main.orthographicSize;
+        float width = height * Camera.main.aspect;
+        float size = (height > width) ? height : width;
+
 		backgroundMaterials = new Material[Backgrounds.Count];
 		for (int i = 0; i < Backgrounds.Count; i++)
         {
+            Backgrounds[i].transform.localScale = new Vector3(size, size, 0.0f);
             backgroundMaterials[i] = Backgrounds[i].GetComponent<Renderer>().material;
         }
 	}
