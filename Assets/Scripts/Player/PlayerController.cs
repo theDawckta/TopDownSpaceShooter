@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     public float MaxSpeed = 10.0f;
     public float RotateSpeed = 100.0f;
     public float GunCoolDown = 1.0f;
+    public float RollSpeed = 1.0f;
+    public float TurnSpeed = 10.0f;
     public GameObject Nose;
     public GameObject PlayerBullet;
 
@@ -20,6 +22,14 @@ public class PlayerController : MonoBehaviour
         shipRigidbody = transform.GetComponent<Rigidbody2D>();
     }
 
+    void Update()
+    {
+        if (Input.GetButton("Fire1") && !firing)
+        {
+            StartCoroutine("FireGun");
+        }
+    }
+    
     void FixedUpdate()
     {
         float xVel = transform.InverseTransformDirection(shipRigidbody.velocity).x;
@@ -37,22 +47,14 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetAxisRaw("Horizontal") > 0)
-        {
-            transform.Rotate(-Vector3.forward * (Time.deltaTime * RotateSpeed));
-        }
-        else if (Input.GetAxisRaw("Horizontal") < 0)
-        {
-            transform.Rotate(Vector3.forward * (Time.deltaTime * RotateSpeed));
-        }
-    }
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,
+                                                                         Input.mousePosition.y,
+                                                                         1.0f));
 
-    void Update()
-    {
-        if (Input.GetButton("Jump") && !firing)
-        {
-            StartCoroutine("FireGun");
-        }
+        Quaternion rotate = Quaternion.LookRotation(mousePosition - transform.position, -Vector3.forward);
+        transform.localRotation = Quaternion.RotateTowards(transform.localRotation, rotate, TurnSpeed);
+        transform.Rotate(Quaternion.ToEulerAngles(rotate) * TurnSpeed * Time.deltaTime);
+        transform.localEulerAngles = new Vector3(0.0f, 0.0f, transform.localEulerAngles.z);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -68,8 +70,7 @@ public class PlayerController : MonoBehaviour
     {
         firing = true;
         GameObject playerBullet = Instantiate<GameObject>(PlayerBullet, Nose.transform.position, Nose.transform.rotation);
-        playerBullet.transform.parent = transform.root;
-        
+
         float timePassed = 0.0f;
         while ((timePassed / GunCoolDown) <= 1)
         {

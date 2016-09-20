@@ -9,6 +9,8 @@ public class EnemyController : MonoBehaviour
     public float RotateSpeed = 100.0f;
     [HideInInspector]
     public GameObject Player;
+    [HideInInspector]
+    public bool Alive = true;
 
     private System.Random random = new System.Random(System.DateTime.Now.Ticks.GetHashCode());
     private Rigidbody2D enemyRigidbody;
@@ -36,7 +38,7 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.collider.gameObject.layer == LayerMask.NameToLayer("PlayerBullet"))
         {
-            Destroy(gameObject);
+            Alive = false;
         }
     }
 }
