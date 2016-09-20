@@ -12,8 +12,11 @@ ModelImporter:
     400002: //RootNode
     400004: Texture Group
     2300000: HERO_v1
+    2300002: //RootNode
     3300000: HERO_v1
+    3300002: //RootNode
     4300000: HERO_v1
+    4300002: Hero01
   materials:
     importMaterials: 1
     materialName: 0
