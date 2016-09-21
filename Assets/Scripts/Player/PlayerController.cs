@@ -11,15 +11,16 @@ public class PlayerController : MonoBehaviour
     public float GunCoolDown = 1.0f;
     public float RollSpeed = 1.0f;
     public float TurnSpeed = 10.0f;
+    public GameObject RollRotation;
     public GameObject Nose;
     public GameObject PlayerBullet;
 
-    private Rigidbody2D shipRigidbody;
+    private Rigidbody2D playerRigidbody;
     private bool firing = false;
 
     void Start()
     {
-        shipRigidbody = transform.GetComponent<Rigidbody2D>();
+        playerRigidbody = transform.GetComponent<Rigidbody2D>();
     }
 
     void Update()
@@ -29,31 +30,48 @@ public class PlayerController : MonoBehaviour
             StartCoroutine("FireGun");
         }
     }
-    
+
     void FixedUpdate()
     {
-        float xVel = transform.InverseTransformDirection(shipRigidbody.velocity).x;
-        float yVel = transform.InverseTransformDirection(shipRigidbody.velocity).y;
+        Vector3 velocityAngle;
+        Vector2 shipDirection;
+        float direction;
+        Quaternion rotate;
+        Vector3 mousePosition;
+        float xVel = transform.InverseTransformDirection(playerRigidbody.velocity).x;
+        float yVel = transform.InverseTransformDirection(playerRigidbody.velocity).y;
 
         if ((xVel + yVel) < MaxSpeed)
         {
             if (Input.GetAxisRaw("Vertical") > 0)
             {
-                shipRigidbody.AddForce(transform.up * Acceleration);
+                playerRigidbody.AddForce(transform.up * Acceleration);
             }
             else if (Input.GetAxisRaw("Vertical") < 0)
             {
-                shipRigidbody.AddForce(-transform.up * Acceleration);
+                playerRigidbody.AddForce(-transform.up * Acceleration);
             }
         }
 
-        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,
+        mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,
                                                                            Input.mousePosition.y,
                                                                           -Camera.main.transform.position.z));
-	
-		Quaternion rotate = Quaternion.FromToRotation(Vector3.up, mousePosition - transform.position);
+
+        rotate = Quaternion.FromToRotation(Vector3.up, mousePosition - transform.position);
         transform.localRotation = Quaternion.RotateTowards(transform.localRotation, rotate, TurnSpeed);
-		transform.localEulerAngles = new Vector3(0.0f, 0.0f, transform.localEulerAngles.z);
+        transform.localEulerAngles = new Vector3(0.0f, 0.0f, transform.localEulerAngles.z);
+
+        velocityAngle = playerRigidbody.velocity.normalized;
+        shipDirection = transform.position - mousePosition;
+        direction = AngleFromAToB(velocityAngle, shipDirection);
+        if ((direction > 0.0f && direction < 180.0f) && direction != 90.0f)
+        {
+            RollRotation.transform.localEulerAngles = new Vector3(0.0f, -(180 - Mathf.Abs(direction)), 0.0f);
+        }
+        else if ((direction < 0.0f && direction > -180.0f) && direction != 90.0f)
+        {
+            RollRotation.transform.localEulerAngles = new Vector3(0.0f, 180 - Mathf.Abs(direction), 0.0f);
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -63,6 +81,12 @@ public class PlayerController : MonoBehaviour
             Destroy(gameObject);
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
+    }
+
+    IEnumerator HandleRoll()
+    {
+
+        yield return null;
     }
 
     IEnumerator FireGun()
@@ -78,5 +102,16 @@ public class PlayerController : MonoBehaviour
         }
 
         firing = false;
+    }
+
+    float AngleFromAToB(Vector3 angleA, Vector3 angleB)
+    {
+        Vector3 axis = new Vector3(0, 0, 1);
+        float angle = Vector3.Angle(angleA, angleB);
+        float sign = Mathf.Sign(Vector3.Dot(axis, Vector3.Cross(angleA, angleB)));
+
+        // angle in [-179,180]
+        float signed_angle = angle * sign;
+        return signed_angle;
     }
 }

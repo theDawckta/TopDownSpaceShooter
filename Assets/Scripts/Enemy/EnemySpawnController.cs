@@ -32,10 +32,8 @@ public class EnemySpawnController : MonoBehaviour
         {
             if ((enemies[i].transform.position - enemies[i].Player.transform.position).magnitude > EnemyRange || enemies[i].Alive == false)
             {
-
                 Destroy(enemies[i].gameObject);
                 enemies.Remove(enemies[i]);
-                
             }
         }
     }
