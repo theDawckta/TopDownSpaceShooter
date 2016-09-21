@@ -37,9 +37,14 @@ public class PlayerController : MonoBehaviour
         Vector2 shipDirection;
         float direction;
         Quaternion rotate;
+        float rotateModifier = 0.0f;
+        int reverseflag = 0;
         Vector3 mousePosition;
         float xVel = transform.InverseTransformDirection(playerRigidbody.velocity).x;
         float yVel = transform.InverseTransformDirection(playerRigidbody.velocity).y;
+		mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,
+                                                                           Input.mousePosition.y,
+                                                                          -Camera.main.transform.position.z));
 
         if ((xVel + yVel) < MaxSpeed)
         {
@@ -53,10 +58,6 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,
-                                                                           Input.mousePosition.y,
-                                                                          -Camera.main.transform.position.z));
-
         rotate = Quaternion.FromToRotation(Vector3.up, mousePosition - transform.position);
         transform.localRotation = Quaternion.RotateTowards(transform.localRotation, rotate, TurnSpeed);
         transform.localEulerAngles = new Vector3(0.0f, 0.0f, transform.localEulerAngles.z);
@@ -64,14 +65,16 @@ public class PlayerController : MonoBehaviour
         velocityAngle = playerRigidbody.velocity.normalized;
         shipDirection = transform.position - mousePosition;
         direction = AngleFromAToB(velocityAngle, shipDirection);
-        if ((direction > 0.0f && direction < 180.0f) && direction != 90.0f)
+        if ((direction > 0.0f && direction < 180.0f))
         {
             RollRotation.transform.localEulerAngles = new Vector3(0.0f, -(180 - Mathf.Abs(direction)), 0.0f);
         }
-        else if ((direction < 0.0f && direction > -180.0f) && direction != 90.0f)
+        else if ((direction < 0.0f && direction > -180.0f))
         {
-            RollRotation.transform.localEulerAngles = new Vector3(0.0f, 180 - Mathf.Abs(direction), 0.0f);
+            RollRotation.transform.localEulerAngles = new Vector3(0.0f, (180 - Mathf.Abs(direction)), 0.0f);
         }
+
+		Debug.Log( "direction: " + direction + "     velocityAngle" + velocityAngle + "     angle:" + RollRotation.transform.localEulerAngles.y);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -106,6 +109,8 @@ public class PlayerController : MonoBehaviour
 
     float AngleFromAToB(Vector3 angleA, Vector3 angleB)
     {
+    	if(angleA == Vector3.zero || angleB == Vector3.zero)
+    		return 0.0f;
         Vector3 axis = new Vector3(0, 0, 1);
         float angle = Vector3.Angle(angleA, angleB);
         float sign = Mathf.Sign(Vector3.Dot(axis, Vector3.Cross(angleA, angleB)));
