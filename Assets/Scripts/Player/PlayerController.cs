@@ -12,11 +12,13 @@ public class PlayerController : MonoBehaviour
     public float RollSpeed = 1.0f;
     public float TurnSpeed = 10.0f;
     public GameObject RollRotation;
-    public GameObject Nose;
+    public GameObject Barrel1;
+	public GameObject Barrel2;
     public GameObject PlayerBullet;
 
     private Rigidbody2D playerRigidbody;
     private bool firing = false;
+    private bool barrelCycler = true;
 
     void Start()
     {
@@ -95,7 +97,13 @@ public class PlayerController : MonoBehaviour
     IEnumerator FireGun()
     {
         firing = true;
-        GameObject playerBullet = Instantiate<GameObject>(PlayerBullet, Nose.transform.position, Nose.transform.rotation);
+        barrelCycler = !barrelCycler;
+        GameObject playerBullet;
+
+        if(barrelCycler)
+			playerBullet = Instantiate<GameObject>(PlayerBullet, Barrel1.transform.position, Barrel1.transform.rotation);
+		else
+			playerBullet = Instantiate<GameObject>(PlayerBullet, Barrel2.transform.position, Barrel2.transform.rotation);
 
         float timePassed = 0.0f;
         while ((timePassed / GunCoolDown) <= 1)

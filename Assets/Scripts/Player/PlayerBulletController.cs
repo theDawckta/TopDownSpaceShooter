@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class PlayerBulletController : MonoBehaviour
 {
-    public float Acceleration = 50.0f;
-    public float MaxSpeed = 50.0f;
+    public float Speed = 5.0f;
     public float Range = 10.0f;
 
     private Vector3 originalPosition;
@@ -19,13 +18,7 @@ public class PlayerBulletController : MonoBehaviour
 
     void FixedUpdate()
     {
-        float xVel = transform.InverseTransformDirection(playerBulletRigidbody.velocity).x;
-        float yVel = transform.InverseTransformDirection(playerBulletRigidbody.velocity).y;
-
-        if ((xVel + yVel) < MaxSpeed)
-        {
-            playerBulletRigidbody.AddForce(transform.up * Acceleration);
-        }
+        playerBulletRigidbody.AddForce(transform.up * Speed, ForceMode2D.Impulse);
 
         if ((originalPosition - transform.position).magnitude > Range)
         {
