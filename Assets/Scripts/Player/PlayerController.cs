@@ -39,14 +39,10 @@ public class PlayerController : MonoBehaviour
         Vector2 shipDirection;
         float direction;
         Quaternion rotate;
-        float rotateModifier = 0.0f;
-        int reverseflag = 0;
         Vector3 mousePosition;
         float xVel = transform.InverseTransformDirection(playerRigidbody.velocity).x;
         float yVel = transform.InverseTransformDirection(playerRigidbody.velocity).y;
-		mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,
-                                                                           Input.mousePosition.y,
-                                                                          -Camera.main.transform.position.z));
+		mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
 
         if ((xVel + yVel) < MaxSpeed)
         {
@@ -88,12 +84,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    IEnumerator HandleRoll()
-    {
-
-        yield return null;
-    }
-
     IEnumerator FireGun()
     {
         firing = true;
@@ -117,8 +107,8 @@ public class PlayerController : MonoBehaviour
 
     float AngleFromAToB(Vector3 angleA, Vector3 angleB)
     {
-    	if(angleA == Vector3.zero || angleB == Vector3.zero)
-    		return 0.0f;
+        if (angleA == Vector3.zero || angleB == Vector3.zero)
+            return 0.0f;
         Vector3 axis = new Vector3(0, 0, 1);
         float angle = Vector3.Angle(angleA, angleB);
         float sign = Mathf.Sign(Vector3.Dot(axis, Vector3.Cross(angleA, angleB)));

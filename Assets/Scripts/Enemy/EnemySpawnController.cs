@@ -45,10 +45,9 @@ public class EnemySpawnController : MonoBehaviour
         
         spawning = true;
 
-        EnemyController enemy = Instantiate<EnemyController>(Enemy, Player.transform.position, Quaternion.Euler(new Vector3(0.0f, 0.0f, angle)));
-        enemy.transform.parent = transform.root;
-        enemy.transform.position = enemy.transform.up * dist;
+        EnemyController enemy = Instantiate<EnemyController>(Enemy, Player.transform.position + Player.transform.up * dist, Quaternion.Euler(new Vector3(0.0f, 0.0f, angle)));
         enemy.Player = Player;
+        Debug.Log("enemyAdded");
         enemies.Add(enemy);
 
         float timePassed = 0.0f;

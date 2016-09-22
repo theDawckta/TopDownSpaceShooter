@@ -6,14 +6,17 @@ public class PlayerBulletController : MonoBehaviour
 {
     public float Speed = 5.0f;
     public float Range = 10.0f;
+    public ParticleSystem Hit;
 
     private Vector3 originalPosition;
     private Rigidbody2D playerBulletRigidbody;
+    private MeshRenderer playerBulletMeshRenderer;
 
     void Start()
     {
         originalPosition = transform.position;
         playerBulletRigidbody = transform.GetComponent<Rigidbody2D>();
+        playerBulletMeshRenderer = transform.GetComponent<MeshRenderer>();
     }
 
     void FixedUpdate()
@@ -30,7 +33,15 @@ public class PlayerBulletController : MonoBehaviour
     {
         if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            Destroy(gameObject);
+            Hit.Play();
+            playerBulletMeshRenderer.enabled = false;
+            StartCoroutine("Dead");
         }
+    }
+
+    IEnumerator Dead()
+    {
+        yield return new WaitForSeconds(0.02f);
+        Destroy(gameObject);
     }
 }
