@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour
     public float Acceleration = 10.0f;
     public float MaxSpeed = 10.0f;
     public float RotateSpeed = 100.0f;
+    public float HitPoints = 10.0f;
     public GameObject RollRotation;
     [HideInInspector]
     public GameObject Player;
@@ -66,7 +67,9 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.collider.gameObject.layer == LayerMask.NameToLayer("PlayerBullet"))
         {
-            Alive = false;
+            HitPoints = HitPoints - 1;
+            if(HitPoints <= 0)
+                Alive = false;
         }
     }
 
