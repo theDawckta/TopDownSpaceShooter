@@ -11,29 +11,33 @@ public class EnemySpawnController : MonoBehaviour
     public float SpawnAreaMax = 5.0f;
     public int MaxEnemies = 10;
     public float EnemyRange = 10.0f;
+    private bool spawning = false;
 
     private System.Random random = new System.Random(System.DateTime.Now.Ticks.GetHashCode());
-    private bool spawning = false;
+    
     private List<EnemyController> enemies = new List<EnemyController>();
 
     void Start()
     {
-        StartCoroutine("SpawnTimer");
+       
     }
 
     void Update()
     {
-        if (!spawning && enemies.Count < MaxEnemies)
+        if(spawning)
         {
-            StartCoroutine("SpawnTimer");
-        }
-
-        for (int i = 0; i < enemies.Count; i++)
-        {
-            if ((enemies[i].transform.position - enemies[i].Player.transform.position).magnitude > EnemyRange || enemies[i].Alive == false)
+            if (enemies.Count < MaxEnemies)
             {
-                Destroy(enemies[i].gameObject);
-                enemies.Remove(enemies[i]);
+                StartCoroutine("SpawnTimer");
+            }
+
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                if ((enemies[i].transform.position - enemies[i].Player.transform.position).magnitude > EnemyRange || enemies[i].Alive == false)
+                {
+                    Destroy(enemies[i].gameObject);
+                    enemies.Remove(enemies[i]);
+                }
             }
         }
     }
@@ -62,5 +66,21 @@ public class EnemySpawnController : MonoBehaviour
     public float GetRandomNumber(float minimum, float maximum)
     {
         return (float)random.NextDouble() * (maximum - minimum) + minimum;
+    }
+
+    public void EndSpawn()
+    {
+        spawning = false;
+
+        foreach(EnemyController enemy in enemies)
+        {
+            Destroy(enemy);
+        }
+    }
+
+    public void StartSpawn()
+    {
+        spawning = true;
+        StartCoroutine("SpawnTimer");
     }
 }

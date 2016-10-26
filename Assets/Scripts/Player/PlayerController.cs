@@ -15,14 +15,20 @@ public class PlayerController : MonoBehaviour
     public GameObject Barrel1;
 	public GameObject Barrel2;
     public GameObject PlayerBullet;
+    public delegate void OnPlayerDiedEvent();
+    public event OnPlayerDiedEvent OnPlayerDied;
+    [HideInInspector]
+    public bool PlayerEnabled = false;
 
     private Rigidbody2D playerRigidbody;
     private bool firing = false;
     private bool barrelCycler = true;
+    private Vector3 originalPosition;
 
     void Start()
     {
         playerRigidbody = transform.GetComponent<Rigidbody2D>();
+        originalPosition = gameObject.transform.position;
     }
 
     void Update()
@@ -80,6 +86,7 @@ public class PlayerController : MonoBehaviour
         if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
             Destroy(gameObject);
+
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
@@ -116,5 +123,22 @@ public class PlayerController : MonoBehaviour
         // angle in [-179,180]
         float signed_angle = angle * sign;
         return signed_angle;
+    }
+
+    IEnumerator PlayerDied()
+    {
+        OnPlayerDied();
+        yield return null;
+    }
+
+    public void EnablePlayer()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void DisablePlayer()
+    {
+        gameObject.SetActive(false);
+        gameObject.transform.position = originalPosition;
     }
 }
