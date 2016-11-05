@@ -19,16 +19,20 @@ public class PlayerController : MonoBehaviour
     public event OnPlayerDiedEvent OnPlayerDied;
     [HideInInspector]
     public bool PlayerEnabled = false;
-
     private Rigidbody2D playerRigidbody;
     private bool firing = false;
     private bool barrelCycler = true;
     private Vector3 originalPosition;
 
-    void Start()
+    void Awake()
     {
         playerRigidbody = transform.GetComponent<Rigidbody2D>();
         originalPosition = gameObject.transform.position;
+    }
+
+    void Start()
+    {
+       
     }
 
     void Update()
@@ -78,7 +82,7 @@ public class PlayerController : MonoBehaviour
             RollRotation.transform.localEulerAngles = new Vector3(0.0f, (180 - Mathf.Abs(direction)), 0.0f);
         }
 
-		Debug.Log( "direction: " + direction + "     velocityAngle" + velocityAngle + "     angle:" + RollRotation.transform.localEulerAngles.y);
+		//Debug.Log( "direction: " + direction + "     velocityAngle" + velocityAngle + "     angle:" + RollRotation.transform.localEulerAngles.y);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
