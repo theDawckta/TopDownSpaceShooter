@@ -1,17 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class StatePatternEnemy : MonoBehaviour
+public class StatePatternEnemy : StarShip
 {
-    public float MaxSpeed;
-    public float Acceleration = 10.0f;
-    public float TurnSpeed = 10.0f;
     public float SearchingTurnSpeed = 12.0f;
     public float SearchingDuration = 4f;
     public float SightRange = 20f;
     public Transform[] WayPoints;
     public Transform Eyes;
-    public GameObject RollRotation;
     public Vector3 Offset = new Vector3(0, .5f, 0);
     public MeshRenderer MeshRendererFlag;
     [HideInInspector]
@@ -26,12 +22,13 @@ public class StatePatternEnemy : MonoBehaviour
     public PatrolState patrolState;
     [HideInInspector]
     public Rigidbody2D enemyRigidbody;
-    private void Awake()
+    protected virtual void Awake()
     {
         chaseState = new ChaseState(this);
         alertState = new AlertState(this);
         patrolState = new PatrolState(this);
         enemyRigidbody = transform.GetComponent<Rigidbody2D>();
+        base.Awake();
     }
 
     // Use this for initialization
@@ -50,6 +47,4 @@ public class StatePatternEnemy : MonoBehaviour
     {
         currentState.OnTriggerEnter(other);
     }
-
-
 }

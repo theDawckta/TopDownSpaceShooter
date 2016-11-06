@@ -3,15 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : StarShip
 {
-    public float Acceleration = 10.0f;
-    public float MaxSpeed = 10.0f;
-    public float RotateSpeed = 100.0f;
     public float GunCoolDown = 1.0f;
-    public float RollSpeed = 1.0f;
-    public float TurnSpeed = 10.0f;
-    public GameObject RollRotation;
     public GameObject Barrel1;
 	public GameObject Barrel2;
     public GameObject PlayerBullet;
@@ -19,15 +13,14 @@ public class PlayerController : MonoBehaviour
     public event OnPlayerDiedEvent OnPlayerDied;
     [HideInInspector]
     public bool PlayerEnabled = false;
-    private Rigidbody2D playerRigidbody;
     private bool firing = false;
     private bool barrelCycler = true;
     private Vector3 originalPosition;
 
-    void Awake()
+	protected virtual void Awake()
     {
-        playerRigidbody = transform.GetComponent<Rigidbody2D>();
         originalPosition = gameObject.transform.position;
+        base.Awake();
     }
 
     void Start()
@@ -45,45 +38,19 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector3 velocityAngle;
-        Vector2 shipDirection;
-        float direction;
-        Quaternion rotate;
-        Vector3 mousePosition;
-        float xVel = transform.InverseTransformDirection(playerRigidbody.velocity).x;
-        float yVel = transform.InverseTransformDirection(playerRigidbody.velocity).y;
-		mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
+		Vector3 mousePosition= Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
 
-        if ((xVel + yVel) < MaxSpeed)
+		if (Input.GetAxisRaw("Vertical") > 0)
         {
-            if (Input.GetAxisRaw("Vertical") > 0)
-            {
-                playerRigidbody.AddForce(transform.up * Acceleration);
-            }
-            else if (Input.GetAxisRaw("Vertical") < 0)
-            {
-                playerRigidbody.AddForce(-transform.up * Acceleration);
-            }
+            this.AddThrust(transform.up * Acceleration);
+        }
+        else if (Input.GetAxisRaw("Vertical") < 0)
+        {
+            this.AddThrust(-transform.up * Acceleration);
         }
 
-        rotate = Quaternion.FromToRotation(Vector3.up, mousePosition - transform.position);
-        transform.localRotation = Quaternion.RotateTowards(transform.localRotation, rotate, TurnSpeed);
-        transform.localEulerAngles = new Vector3(0.0f, 0.0f, transform.localEulerAngles.z);
-
-        velocityAngle = playerRigidbody.velocity.normalized;
-        shipDirection = transform.position - mousePosition;
-        direction = AngleFromAToB(velocityAngle, shipDirection);
-        if ((direction > 0.0f && direction < 180.0f))
-        {
-            RollRotation.transform.localEulerAngles = new Vector3(0.0f, -(180 - Mathf.Abs(direction)), 0.0f);
-        }
-        else if ((direction < 0.0f && direction > -180.0f))
-        {
-            RollRotation.transform.localEulerAngles = new Vector3(0.0f, (180 - Mathf.Abs(direction)), 0.0f);
-        }
-
-		//Debug.Log( "direction: " + direction + "     velocityAngle" + velocityAngle + "     angle:" + RollRotation.transform.localEulerAngles.y);
-    }
+		this.AddRoll(mousePosition);
+   	}
 
     void OnCollisionEnter2D(Collision2D collision)
     {
