@@ -17,7 +17,7 @@ public class PlayerController : StarShip
     private bool barrelCycler = true;
     private Vector3 originalPosition;
 
-	protected virtual void Awake()
+	void Awake()
     {
         originalPosition = gameObject.transform.position;
         base.Awake();

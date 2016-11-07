@@ -33,7 +33,7 @@ public class EnemySpawnController : MonoBehaviour
 
             for (int i = 0; i < enemies.Count; i++)
             {
-                if ((enemies[i].transform.position - enemies[i].Player.transform.position).magnitude > EnemyRange || enemies[i].Alive == false)
+                if ((enemies[i].transform.position - Player.transform.position).magnitude > EnemyRange)
                 {
                     Destroy(enemies[i].gameObject);
                     enemies.Remove(enemies[i]);
@@ -51,7 +51,6 @@ public class EnemySpawnController : MonoBehaviour
 
         EnemyController enemy = Instantiate<EnemyController>(Enemy, Player.transform.position + Player.transform.up * dist, Quaternion.Euler(new Vector3(0.0f, 0.0f, angle)));
         enemy.Player = Player;
-        Debug.Log("enemyAdded");
         enemies.Add(enemy);
 
         float timePassed = 0.0f;

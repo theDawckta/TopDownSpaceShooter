@@ -7,6 +7,7 @@ public class StarShip : MonoBehaviour {
 	public float MaxSpeed = 10.0f;
 	public float Acceleration = 10.0f;
     public float TurnSpeed = 10.0f;
+    public float HitPoints = 10.0f;
 	public GameObject RollGameObject;
 	public Vector3 Target;
 
@@ -78,6 +79,19 @@ public class StarShip : MonoBehaviour {
         transform.localRotation = Quaternion.RotateTowards(transform.localRotation, rotate, TurnSpeed);
         transform.localEulerAngles = new Vector3(0.0f, 0.0f, transform.localEulerAngles.z);
 	}
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("PlayerBullet"))
+        {
+            HitPoints = HitPoints - 1;
+            if (HitPoints <= 0)
+            {
+                Destroy(gameObject);
+                Debug.Log("ship down");
+            }
+        }
+    }
 
 	IEnumerator TransitionTarget(float time, Vector3 newPosition)
 	{
