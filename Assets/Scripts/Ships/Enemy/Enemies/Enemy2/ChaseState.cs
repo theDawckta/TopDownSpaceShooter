@@ -56,8 +56,10 @@ public class ChaseState : IEnemyState
 
     private void Chase()
     {
+		enemy.Target = enemy.chaseTarget.position + (enemy.chaseTarget.up * enemy.chaseTarget.GetComponent<Rigidbody2D>().velocity.magnitude);
+		enemy.AddThrust(enemy.transform.up);
+		Debug.Log(enemy.Target);
+		Debug.DrawLine(enemy.chaseTarget.position, enemy.Target, Color.green);
         enemy.MeshRendererFlag.material.color = Color.red;
     }
-
-
 }

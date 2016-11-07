@@ -38,18 +38,18 @@ public class PlayerController : StarShip
 
     void FixedUpdate()
     {
-		Vector3 mousePosition= Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
+		this.Target = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
 
 		if (Input.GetAxisRaw("Vertical") > 0)
         {
-            this.AddThrust(transform.up * Acceleration);
+            this.AddThrust(transform.up);
         }
         else if (Input.GetAxisRaw("Vertical") < 0)
         {
-            this.AddThrust(-transform.up * Acceleration);
+            this.AddThrust(-transform.up);
         }
 
-		this.AddRoll(mousePosition);
+        base.FixedUpdate();
    	}
 
     void OnCollisionEnter2D(Collision2D collision)

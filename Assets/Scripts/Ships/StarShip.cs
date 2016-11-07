@@ -8,10 +8,11 @@ public class StarShip : MonoBehaviour {
 	public float Acceleration = 10.0f;
     public float TurnSpeed = 10.0f;
 	public GameObject RollGameObject;
+	public Vector3 Target;
 
 	private Rigidbody2D shipRigidbody;
 
-	protected virtual void Awake()
+	protected void Awake()
 	{
 		shipRigidbody = transform.GetComponent<Rigidbody2D>();
 	}
@@ -26,6 +27,12 @@ public class StarShip : MonoBehaviour {
 		
 	}
 
+	protected void FixedUpdate()
+	{
+		AddRotation();
+		AddRoll();
+	}
+
 	public void AddThrust(Vector3 direction)
 	{
 		float xVel = transform.InverseTransformDirection(shipRigidbody.velocity).x;
@@ -37,30 +44,53 @@ public class StarShip : MonoBehaviour {
         }
 	}
 
-	public void AddRoll(Vector3 position)
+	public void MoveTarget(float time, Vector3 newPosition)
+	{
+		StartCoroutine(TransitionTarget(time, newPosition));
+	}
+
+	void AddRoll()
 	{
 		Vector3 velocityAngle;
         Vector2 shipDirection;
-		float direction;
-		Quaternion rotate;
-		
-		rotate = Quaternion.FromToRotation(Vector3.up, position - transform.position);
-        transform.localRotation = Quaternion.RotateTowards(transform.localRotation, rotate, TurnSpeed);
-        transform.localEulerAngles = new Vector3(0.0f, 0.0f, transform.localEulerAngles.z);
+		float angleOffset;
 
         velocityAngle = shipRigidbody.velocity.normalized;
-        shipDirection = transform.position - position;
-        direction = AngleFromAToB(velocityAngle, shipDirection);
-        if ((direction > 0.0f && direction < 180.0f))
+        shipDirection = transform.position - Target;
+        angleOffset = AngleFromAToB(velocityAngle, shipDirection);
+		if ((angleOffset > 0.0f && angleOffset < 180.0f))
         {
-			RollGameObject.transform.localEulerAngles = new Vector3(0.0f, -(180 - Mathf.Abs(direction)), 0.0f);
+			RollGameObject.transform.localEulerAngles = new Vector3(0.0f, -(180 - Mathf.Abs(angleOffset)), 0.0f);
         }
-        else if ((direction < 0.0f && direction > -180.0f))
+		else if ((angleOffset < 0.0f && angleOffset > -180.0f))
         {
-			RollGameObject.transform.localEulerAngles = new Vector3(0.0f, (180 - Mathf.Abs(direction)), 0.0f);
+			RollGameObject.transform.localEulerAngles = new Vector3(0.0f, (180 - Mathf.Abs(angleOffset)), 0.0f);
         }
 
 		//Debug.Log( "direction: " + direction + "     velocityAngle" + velocityAngle + "     angle:" + RollRotation.transform.localEulerAngles.y);
+	}
+
+	void AddRotation()
+	{
+		Quaternion rotate;
+		
+		rotate = Quaternion.FromToRotation(Vector3.up, Target - transform.position);
+        transform.localRotation = Quaternion.RotateTowards(transform.localRotation, rotate, TurnSpeed);
+        transform.localEulerAngles = new Vector3(0.0f, 0.0f, transform.localEulerAngles.z);
+	}
+
+	IEnumerator TransitionTarget(float time, Vector3 newPosition)
+	{
+	    float t = 0.0f;
+	    Vector3 startingPos = Target;
+	    while (t < time)
+	    {
+			t += Time.deltaTime * (Time.timeScale/time);
+			Target = Vector3.Lerp(startingPos, newPosition, t);
+			Debug.DrawLine(startingPos, Target ,Color.red);
+			yield return 0;
+		}
+
 	}
 
 	float AngleFromAToB(Vector3 angleA, Vector3 angleB)

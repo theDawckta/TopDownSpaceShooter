@@ -41,33 +41,33 @@ public class PatrolState : IEnemyState
     private void Look()
     {
         RaycastHit2D hit = Physics2D.Raycast((Vector2)enemy.Eyes.transform.position, (Vector2)enemy.Eyes.transform.forward, 20);
-        if (hit.collider.tag == "Player")
+       
+        if (hit)
         {
-            Debug.Log("hit");
-            enemy.chaseTarget = hit.transform;
-            ToChaseState();
+			if(hit.collider.tag == "Player")
+			{
+	            enemy.chaseTarget = hit.transform;
+	            ToChaseState();
+            }
         }
         Debug.DrawRay(enemy.Eyes.transform.position, enemy.Eyes.transform.forward * enemy.SightRange, Color.red);
     }
 
     void Patrol()
     {
-        //enemy.enemyRigidbody.AddForce(enemy.transform.up * enemy.Acceleration);
-        enemy.MeshRendererFlag.material.color = Color.green;
-
         Vector3 distance;
 
-        //enemy.AddThrust(enemy.transform.up * enemy.Acceleration);
-		enemy.AddRoll(enemy.WayPoints[nextWayPoint].position);
-
-        distance = enemy.WayPoints[nextWayPoint].position - enemy.transform.position;
-        Debug.Log(distance);
-        if (distance.magnitude < 2)
+		distance = enemy.WayPoints[nextWayPoint].position - enemy.transform.position;
+		
+        if (distance.magnitude < 4)
         {
-            nextWayPoint = (nextWayPoint + 1) % enemy.WayPoints.Length;
+			nextWayPoint = (nextWayPoint + 1) % enemy.WayPoints.Length;
+			enemy.MoveTarget(1.0f, enemy.WayPoints[nextWayPoint].position);
         }
-    }
 
+        enemy.AddThrust(enemy.transform.up);
+		enemy.MeshRendererFlag.material.color = Color.green;
+    }
 
     float AngleFromAToB(Vector3 angleA, Vector3 angleB)
     {

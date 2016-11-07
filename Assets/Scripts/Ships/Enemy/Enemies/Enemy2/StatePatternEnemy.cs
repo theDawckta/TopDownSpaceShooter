@@ -22,12 +22,14 @@ public class StatePatternEnemy : StarShip
     public PatrolState patrolState;
     [HideInInspector]
     public Rigidbody2D enemyRigidbody;
+
     protected virtual void Awake()
     {
         chaseState = new ChaseState(this);
         alertState = new AlertState(this);
         patrolState = new PatrolState(this);
         enemyRigidbody = transform.GetComponent<Rigidbody2D>();
+        Target = WayPoints[0].position;
         base.Awake();
     }
 
