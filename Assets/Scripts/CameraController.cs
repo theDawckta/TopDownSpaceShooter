@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour {
 
-    public GameObject Player;
+    public StarShip Player;
+    public float zoomOutMultiplier;
+
+    private float cameraOriginalSize;
 
 	void Start () 
     {
-		
+        cameraOriginalSize = Camera.main.orthographicSize;
 	}
-	
-	void FixedUpdate () 
+
+    void Update ()
     {
         transform.position = new Vector3(Player.transform.position.x, Player.transform.position.y, transform.position.z);
-	}
+        Camera.main.orthographicSize = cameraOriginalSize + (Player.shipRigidbody.velocity.magnitude * zoomOutMultiplier);
+    }
 }

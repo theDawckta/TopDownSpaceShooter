@@ -11,7 +11,8 @@ public class StarShip : MonoBehaviour {
 	public GameObject RollGameObject;
 	public Vector3 Target;
 
-	private Rigidbody2D shipRigidbody;
+    [HideInInspector]
+	public Rigidbody2D shipRigidbody;
 
 	protected void Awake()
 	{
