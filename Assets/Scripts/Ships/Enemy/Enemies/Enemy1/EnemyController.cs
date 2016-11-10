@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyController : StarShip
 {
     [HideInInspector]
-    public GameObject Player;
+    public StarShip Player;
 
     private System.Random random = new System.Random(System.DateTime.Now.Ticks.GetHashCode());
     private float turnInterval;
@@ -17,15 +17,15 @@ public class EnemyController : StarShip
         rotateDirection = (random.NextDouble() > 0.5) ? 1 : -1;
         turnInterval = random.Next(2, 4);
         InvokeRepeating("TurnTimer", 0.0f, turnInterval);
+        Player = base.Target.GetComponent<StarShip>();
         transform.LookAt(Player.transform);
-        this.Target = Player.transform.position;
     }
 
     void FixedUpdate()
     {
         Vector3 distance;
 
-        distance = this.Target - transform.position;
+        distance = this.Target.transform.position - transform.position;
 
         if (distance.magnitude < 3)
         {
@@ -33,10 +33,10 @@ public class EnemyController : StarShip
         }
 
         this.AddThrust(this.transform.up);
-        if(turnCycler)
-            this.AddThrust(this.transform.right);
-        else
-            this.AddThrust(-this.transform.right);
+        //if(turnCycler)
+        //    this.AddThrust(this.transform.right);
+        //else
+        //    this.AddThrust(-this.transform.right);
         base.FixedUpdate();
     }
 

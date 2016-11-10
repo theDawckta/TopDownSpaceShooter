@@ -3,8 +3,10 @@ using System.Collections;
 
 public class PatrolState : IEnemyState
 {
+    public float PatrolDistance;
+
     private readonly StatePatternEnemy enemy;
-    private int nextWayPoint;
+    private int currentWayPoint;
 
     public PatrolState(StatePatternEnemy statePatternEnemy)
     {
@@ -57,12 +59,11 @@ public class PatrolState : IEnemyState
     {
         Vector3 distance;
 
-		distance = enemy.WayPoints[nextWayPoint].position - enemy.transform.position;
-		
+		distance = enemy.WayPoints[currentWayPoint] - enemy.transform.position;
         if (distance.magnitude < 4)
         {
-			nextWayPoint = (nextWayPoint + 1) % enemy.WayPoints.Length;
-			enemy.MoveTarget(1.0f, enemy.WayPoints[nextWayPoint].position);
+            enemy.WayPoints[currentWayPoint] = enemy.Player.transform.position + (Random.insideUnitSphere * PatrolDistance);
+            enemy.Target.transform.position = enemy.WayPoints[currentWayPoint];
         }
 
         enemy.AddThrust(enemy.transform.up);

@@ -4,62 +4,57 @@ using UnityEngine;
 
 public class EnemySpawnController : MonoBehaviour
 {
-    public EnemyController Enemy;
-    public GameObject Player;
+    public StarShip Player;
+    public List<StarShip> EnemyList = new List<StarShip>();
     public float SpawnFrequency = 5.0f;
     public float SpawnAreaMin = 3.0f;
     public float SpawnAreaMax = 5.0f;
-    public int MaxEnemies = 10;
+    public int EnemyMax = 10;
     public float EnemyRange = 10.0f;
-    private bool spawning = false;
 
     private System.Random random = new System.Random(System.DateTime.Now.Ticks.GetHashCode());
-    
-    private List<EnemyController> enemies = new List<EnemyController>();
+    private int EnemyIndex = 0;
+    private List<StarShip> enemies = new List<StarShip>();
+    private float timePassed = 0.0f;
+    private bool spawning;
 
     void Start()
     {
-       
+        spawning = false;
     }
 
     void Update()
     {
         if(spawning)
         {
-            if (enemies.Count < MaxEnemies)
+            timePassed = timePassed += Time.deltaTime;
+            if (enemies.Count < EnemyMax && timePassed > SpawnFrequency)
             {
-                StartCoroutine("SpawnTimer");
+                SpawnEnemy();
+                timePassed = 0.0f;
             }
+        }
 
-            for (int i = 0; i < enemies.Count; i++)
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            if ((enemies[i].transform.position - enemies[i].Target.transform.position).magnitude > EnemyRange || !enemies[i].Alive)
             {
-                if ((enemies[i].transform.position - Player.transform.position).magnitude > EnemyRange)
-                {
-                    Destroy(enemies[i].gameObject);
-                    enemies.Remove(enemies[i]);
-                }
+                Destroy(enemies[i].gameObject);
+                enemies.Remove(enemies[i]);
             }
         }
     }
 
-    IEnumerator SpawnTimer()
+    void SpawnEnemy()
     {
         float angle = GetRandomNumber(0.0f, 360.0f);
         float dist = GetRandomNumber(SpawnAreaMin, SpawnAreaMax);
-        
-        spawning = true;
+        Vector3 direction = new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), 0.0f).normalized;
 
-        EnemyController enemy = Instantiate<EnemyController>(Enemy, Player.transform.position + Player.transform.up * dist, Quaternion.Euler(new Vector3(0.0f, 0.0f, angle)));
-        enemy.Player = Player;
-        enemies.Add(enemy);
-
-        float timePassed = 0.0f;
-        while ((timePassed / SpawnFrequency) <= 1)
-        {
-            timePassed = timePassed + Time.deltaTime;
-            yield return null;
-        }
-        spawning = false;
+        StarShip newEnemy = Instantiate<StarShip>(EnemyList[EnemyIndex], Player.transform.position + direction * dist, Quaternion.Euler(new Vector3(0.0f, 0.0f, angle)));
+        newEnemy.Target = Player.gameObject;
+        enemies.Add(newEnemy);
+        EnemyIndex = (EnemyIndex + 1 < EnemyList.Count) ? EnemyIndex + 1 : 0;
     }
 
     public float GetRandomNumber(float minimum, float maximum)
@@ -69,17 +64,14 @@ public class EnemySpawnController : MonoBehaviour
 
     public void EndSpawn()
     {
-        spawning = false;
-
-        foreach(EnemyController enemy in enemies)
+        foreach(StarShip enemyInstance in enemies)
         {
-            Destroy(enemy);
+            enemyInstance.Alive = false;
         }
     }
 
     public void StartSpawn()
     {
         spawning = true;
-        StartCoroutine("SpawnTimer");
     }
 }

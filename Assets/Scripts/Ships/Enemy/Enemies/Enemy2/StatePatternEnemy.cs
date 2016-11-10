@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class StatePatternEnemy : StarShip
 {
+    public List<Vector3> WayPoints = new List<Vector3>();
     public float SearchingTurnSpeed = 12.0f;
     public float SearchingDuration = 4f;
     public float SightRange = 20f;
-    public Transform[] WayPoints;
     public Transform Eyes;
     public Vector3 Offset = new Vector3(0, .5f, 0);
     public MeshRenderer MeshRendererFlag;
@@ -22,24 +23,25 @@ public class StatePatternEnemy : StarShip
     public PatrolState patrolState;
     [HideInInspector]
     public Rigidbody2D enemyRigidbody;
+    [HideInInspector]
+    public StarShip Player;
 
-    protected virtual void Awake()
+    void Awake()
     {
         chaseState = new ChaseState(this);
         alertState = new AlertState(this);
         patrolState = new PatrolState(this);
         enemyRigidbody = transform.GetComponent<Rigidbody2D>();
-        Target = WayPoints[0].position;
         base.Awake();
     }
 
-    // Use this for initialization
     void Start()
     {
+        WayPoints.Add(this.Target.transform.position);
+        Player = this.Target.GetComponent<StarShip>();
         currentState = patrolState;
     }
 
-    // Update is called once per frame
     void Update()
     {
         currentState.UpdateState();

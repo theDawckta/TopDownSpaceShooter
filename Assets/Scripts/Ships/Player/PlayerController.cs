@@ -38,15 +38,16 @@ public class PlayerController : StarShip
 
     void FixedUpdate()
     {
-		this.Target = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
+		base.Target.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
 
 		if (Input.GetAxisRaw("Vertical") > 0)
         {
-            this.AddThrust(transform.up);
+            base.AddThrust(transform.up);
+            Debug.Log("ShipThrust " +  Acceleration);
         }
         else if (Input.GetAxisRaw("Vertical") < 0)
         {
-            this.AddThrust(-transform.up);
+            base.AddThrust(-transform.up);
         }
 
         base.FixedUpdate();

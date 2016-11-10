@@ -9,14 +9,19 @@ public class StarShip : MonoBehaviour {
     public float TurnSpeed = 10.0f;
     public float HitPoints = 10.0f;
 	public GameObject RollGameObject;
-	public Vector3 Target;
 
     [HideInInspector]
+    public GameObject Target;
+    [HideInInspector]
 	public Rigidbody2D shipRigidbody;
+    [HideInInspector]
+    public bool Alive;
 
-	protected void Awake()
+	protected virtual void Awake()
 	{
+        Target = new GameObject();
 		shipRigidbody = transform.GetComponent<Rigidbody2D>();
+        Alive = true;
 	}
 
 	void Start () 
@@ -29,7 +34,7 @@ public class StarShip : MonoBehaviour {
 		
 	}
 
-	protected void FixedUpdate()
+	protected virtual void FixedUpdate()
 	{
 		AddRotation();
 		AddRoll();
@@ -58,7 +63,7 @@ public class StarShip : MonoBehaviour {
 		float angleOffset;
 
         velocityAngle = shipRigidbody.velocity.normalized;
-        shipDirection = transform.position - Target;
+        shipDirection = transform.position - Target.transform.position;
         angleOffset = AngleFromAToB(velocityAngle, shipDirection);
 		if ((angleOffset > 0.0f && angleOffset < 180.0f))
         {
@@ -76,7 +81,7 @@ public class StarShip : MonoBehaviour {
 	{
 		Quaternion rotate;
 		
-		rotate = Quaternion.FromToRotation(Vector3.up, Target - transform.position);
+		rotate = Quaternion.FromToRotation(Vector3.up, Target.transform.position - transform.position);
         transform.localRotation = Quaternion.RotateTowards(transform.localRotation, rotate, TurnSpeed);
         transform.localEulerAngles = new Vector3(0.0f, 0.0f, transform.localEulerAngles.z);
 	}
@@ -88,7 +93,7 @@ public class StarShip : MonoBehaviour {
             HitPoints = HitPoints - 1;
             if (HitPoints <= 0)
             {
-                Destroy(gameObject);
+                Alive = false;
                 Debug.Log("ship down");
             }
         }
@@ -97,12 +102,12 @@ public class StarShip : MonoBehaviour {
 	IEnumerator TransitionTarget(float time, Vector3 newPosition)
 	{
 	    float t = 0.0f;
-	    Vector3 startingPos = Target;
+	    Vector3 startingPos = Target.transform.position;
 	    while (t < time)
 	    {
 			t += Time.deltaTime * (Time.timeScale/time);
-			Target = Vector3.Lerp(startingPos, newPosition, t);
-			Debug.DrawLine(startingPos, Target ,Color.red);
+			Target.transform.position = Vector3.Lerp(startingPos, newPosition, t);
+			Debug.DrawLine(startingPos, Target.transform.position ,Color.red);
 			yield return 0;
 		}
 
