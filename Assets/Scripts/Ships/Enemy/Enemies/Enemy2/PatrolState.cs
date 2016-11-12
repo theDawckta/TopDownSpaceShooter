@@ -21,8 +21,6 @@ public class PatrolState : IEnemyState
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
-            ToAlertState();
     }
 
     public void ToPatrolState()
@@ -30,9 +28,14 @@ public class PatrolState : IEnemyState
         Debug.Log("Can't transition to same state");
     }
 
-    public void ToAlertState()
+    public void ToEvadeState()
     {
-        enemy.currentState = enemy.alertState;
+
+    }
+
+    public void ToAttackState()
+    {
+        enemy.currentState = enemy.attackState;
     }
 
     public void ToChaseState()

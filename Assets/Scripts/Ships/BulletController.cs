@@ -2,22 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerBulletController : MonoBehaviour
+public class BulletController : MonoBehaviour
 {
     public float Speed = 5.0f;
     public float Range = 10.0f;
     public ParticleSystem HitSparks;
+    [HideInInspector]
+    public GameObject Shooter;
 
     private Vector3 originalPosition;
-    private Rigidbody2D playerBulletRigidbody;
-    private MeshRenderer playerBulletMeshRenderer;
+    private Rigidbody2D bulletRigidbody;
+    private MeshRenderer bulletMeshRenderer;
 
     void Start()
     {
         originalPosition = transform.position;
-        playerBulletRigidbody = transform.GetComponent<Rigidbody2D>();
-        playerBulletMeshRenderer = transform.GetComponent<MeshRenderer>();
-        playerBulletRigidbody.AddForce(transform.up * Speed, ForceMode2D.Impulse);
+        bulletRigidbody = transform.GetComponent<Rigidbody2D>();
+        bulletMeshRenderer = transform.GetComponent<MeshRenderer>();
+        bulletRigidbody.AddForce(transform.up * Speed, ForceMode2D.Impulse);
     }
 
     void FixedUpdate()
@@ -30,10 +32,10 @@ public class PlayerBulletController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        if (collision.collider.gameObject.layer != gameObject.layer)
         {
-            playerBulletRigidbody.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
-            playerBulletMeshRenderer.enabled = false;
+            bulletRigidbody.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
+            bulletMeshRenderer.enabled = false;
             gameObject.GetComponent<Collider2D>().enabled = false;
             
             HitSparks.Play();

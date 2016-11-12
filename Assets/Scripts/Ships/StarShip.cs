@@ -8,6 +8,9 @@ public class StarShip : MonoBehaviour {
 	public float Acceleration = 10.0f;
     public float TurnSpeed = 10.0f;
     public float HitPoints = 10.0f;
+    public float GunCoolDown = 1.0f;
+    public GameObject[] Barrels;
+    public GameObject Bullet;
 	public GameObject RollGameObject;
 
     [HideInInspector]
@@ -16,6 +19,9 @@ public class StarShip : MonoBehaviour {
 	public Rigidbody2D shipRigidbody;
     [HideInInspector]
     public bool Alive;
+    [HideInInspector]
+    public bool firing = false;
+    private int barrelIndex = 0;
 
 	protected virtual void Awake()
 	{
@@ -39,6 +45,29 @@ public class StarShip : MonoBehaviour {
 		AddRotation();
 		AddRoll();
 	}
+
+    public void FireGun()
+    {
+        if(!firing)
+            StartCoroutine("FireGunCoroutine");
+    }
+
+    IEnumerator FireGunCoroutine()
+    {
+        firing = true;
+
+        GameObject NewBullet = (GameObject)Instantiate(Bullet, Barrels[barrelIndex].transform.position, Barrels[barrelIndex].transform.rotation);
+        barrelIndex = (barrelIndex + 1 < Barrels.Length) ? barrelIndex + 1 : 0;
+
+        float timePassed = 0.0f;
+        while ((timePassed / GunCoolDown) <= 1)
+        {
+            timePassed = timePassed + Time.deltaTime;
+            yield return null;
+        }
+
+        firing = false;
+    }
 
 	public void AddThrust(Vector3 direction)
 	{
@@ -88,15 +117,22 @@ public class StarShip : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("PlayerBullet"))
+        BulletController bullet;
+
+        if (LayerMask.LayerToName(collision.collider.gameObject.layer) == "Bullet")
         {
-            HitPoints = HitPoints - 1;
-            if (HitPoints <= 0)
+            bullet = collision.collider.transform.GetComponent<BulletController>();
+            if(LayerMask.LayerToName(bullet.Shooter.gameObject.layer) != LayerMask.LayerToName(gameObject.layer))
             {
-                Alive = false;
-                Debug.Log("ship down");
+                HitPoints = HitPoints - 1;
+                if (HitPoints <= 0)
+                {
+                    Alive = false;
+                    Debug.Log("ship down");
+                }
             }
         }
+            
     }
 
 	IEnumerator TransitionTarget(float time, Vector3 newPosition)

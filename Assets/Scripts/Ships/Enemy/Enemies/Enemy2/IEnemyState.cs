@@ -10,7 +10,9 @@ public interface IEnemyState
 
     void ToPatrolState();
 
-    void ToAlertState();
+    void ToEvadeState();
+
+    void ToAttackState();
 
     void ToChaseState();
 }

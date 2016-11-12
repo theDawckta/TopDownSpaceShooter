@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ChaseState : IEnemyState
+public class EvadeState : IEnemyState
 {
-
+    public float EvadeTime = 2.0f;
+    private float timePassed = 0.0f;
     private readonly StatePatternEnemy enemy;
 
-
-    public ChaseState(StatePatternEnemy statePatternEnemy)
+    public EvadeState(StatePatternEnemy statePatternEnemy)
     {
         enemy = statePatternEnemy;
     }
@@ -15,7 +15,7 @@ public class ChaseState : IEnemyState
     public void UpdateState()
     {
         Look();
-        Chase();
+        Evade();
     }
 
     public void OnTriggerEnter(Collider other)
@@ -59,23 +59,19 @@ public class ChaseState : IEnemyState
 
     }
 
-    private void Chase()
+    private void Evade()
     {
-        Vector3 distance;
-
-        enemy.WayPoints.Clear();
-        enemy.Target = enemy.Player.gameObject;
-        distance = enemy.Player.gameObject.transform.position - enemy.transform.position;
-        Debug.Log(distance.magnitude);
-        if(distance.magnitude > 20)
+        enemy.MoveTarget(EvadeTime, Quaternion.Euler(0, -45, 0) * enemy.Target.transform.position);
+        if(EvadeTime < timePassed)
         {
             enemy.AddThrust(enemy.transform.up);
-        }
+        }  
         else
         {
             ToAttackState();
+            timePassed = 0.0f;
         }
-		Debug.DrawLine(enemy.chaseTarget.position, enemy.Target.transform.position, Color.green);
-        enemy.MeshRendererFlag.material.color = Color.yellow;
+
+        enemy.MeshRendererFlag.material.color = Color.white;
     }
 }

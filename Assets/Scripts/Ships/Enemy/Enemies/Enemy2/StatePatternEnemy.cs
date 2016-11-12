@@ -18,7 +18,9 @@ public class StatePatternEnemy : StarShip
     [HideInInspector]
     public ChaseState chaseState;
     [HideInInspector]
-    public AlertState alertState;
+    public EvadeState evadeState;
+    [HideInInspector]
+    public AttackState attackState;
     [HideInInspector]
     public PatrolState patrolState;
     [HideInInspector]
@@ -29,7 +31,8 @@ public class StatePatternEnemy : StarShip
     void Awake()
     {
         chaseState = new ChaseState(this);
-        alertState = new AlertState(this);
+        evadeState = new EvadeState(this);
+        attackState = new AttackState(this);
         patrolState = new PatrolState(this);
         enemyRigidbody = transform.GetComponent<Rigidbody2D>();
         base.Awake();
