@@ -28,7 +28,7 @@ public class StatePatternEnemy : StarShip
     [HideInInspector]
     public StarShip Player;
 
-    void Awake()
+    protected override void Awake()
     {
         chaseState = new ChaseState(this);
         evadeState = new EvadeState(this);
@@ -40,8 +40,8 @@ public class StatePatternEnemy : StarShip
 
     void Start()
     {
-        WayPoints.Add(this.Target.transform.position);
-        Player = this.Target.GetComponent<StarShip>();
+        WayPoints.Add(Target);
+        Player = GameObject.FindGameObjectWithTag("Player").GetComponent<StarShip>();
         currentState = patrolState;
     }
 

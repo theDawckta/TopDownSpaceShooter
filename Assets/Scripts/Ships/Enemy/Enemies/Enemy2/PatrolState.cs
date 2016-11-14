@@ -66,7 +66,7 @@ public class PatrolState : IEnemyState
         if (distance.magnitude < 4)
         {
             enemy.WayPoints[currentWayPoint] = enemy.Player.transform.position + (Random.insideUnitSphere * PatrolDistance);
-            enemy.Target.transform.position = enemy.WayPoints[currentWayPoint];
+            enemy.Target = enemy.WayPoints[currentWayPoint];
         }
 
         enemy.AddThrust(enemy.transform.up);

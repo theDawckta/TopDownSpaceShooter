@@ -17,7 +17,7 @@ public class EnemyController : StarShip
         rotateDirection = (random.NextDouble() > 0.5) ? 1 : -1;
         turnInterval = random.Next(2, 4);
         InvokeRepeating("TurnTimer", 0.0f, turnInterval);
-        Player = base.Target.GetComponent<StarShip>();
+        Player = GameObject.FindGameObjectWithTag("Player").GetComponent<StarShip>();
         transform.LookAt(Player.transform);
     }
 
@@ -25,7 +25,7 @@ public class EnemyController : StarShip
     {
         Vector3 distance;
 
-        distance = this.Target.transform.position - transform.position;
+        distance = Target - transform.position;
 
         if (distance.magnitude < 3)
         {

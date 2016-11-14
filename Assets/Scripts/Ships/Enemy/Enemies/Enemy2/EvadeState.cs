@@ -61,7 +61,7 @@ public class EvadeState : IEnemyState
 
     private void Evade()
     {
-        enemy.MoveTarget(EvadeTime, Quaternion.Euler(0, -45, 0) * enemy.Target.transform.position);
+        enemy.MoveTarget(EvadeTime, Quaternion.Euler(0, -45, 0) * enemy.Target);
         if(EvadeTime < timePassed)
         {
             enemy.AddThrust(enemy.transform.up);

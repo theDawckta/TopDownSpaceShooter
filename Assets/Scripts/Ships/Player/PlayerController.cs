@@ -9,9 +9,10 @@ public class PlayerController : StarShip
     public event OnPlayerDiedEvent OnPlayerDied;
     [HideInInspector]
     public bool PlayerEnabled = false;
+
     private Vector3 originalPosition;
 
-	void Awake()
+    protected override void Awake()
     {
         originalPosition = gameObject.transform.position;
         base.Awake();
@@ -30,14 +31,13 @@ public class PlayerController : StarShip
         }
     }
 
-    void FixedUpdate()
+    protected override void FixedUpdate()
     {
-		base.Target.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
+		Target = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
 
 		if (Input.GetAxisRaw("Vertical") > 0)
         {
             base.AddThrust(transform.up);
-            Debug.Log("ShipThrust " +  Acceleration);
         }
         else if (Input.GetAxisRaw("Vertical") < 0)
         {

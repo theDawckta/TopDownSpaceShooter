@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,12 +10,14 @@ public class StarShip : MonoBehaviour {
     public float TurnSpeed = 10.0f;
     public float HitPoints = 10.0f;
     public float GunCoolDown = 1.0f;
+    public ParticleSystem Engine;
     public GameObject[] Barrels;
     public GameObject Bullet;
 	public GameObject RollGameObject;
 
     [HideInInspector]
-    public GameObject Target;
+    [NonSerialized]
+    public Vector3 Target;
     [HideInInspector]
 	public Rigidbody2D shipRigidbody;
     [HideInInspector]
@@ -23,9 +26,9 @@ public class StarShip : MonoBehaviour {
     public bool firing = false;
     private int barrelIndex = 0;
 
-	protected virtual void Awake()
+    protected virtual void Awake()
 	{
-        Target = new GameObject();
+        Target = Vector3.zero;
 		shipRigidbody = transform.GetComponent<Rigidbody2D>();
         Alive = true;
 	}
@@ -57,6 +60,7 @@ public class StarShip : MonoBehaviour {
         firing = true;
 
         GameObject NewBullet = (GameObject)Instantiate(Bullet, Barrels[barrelIndex].transform.position, Barrels[barrelIndex].transform.rotation);
+        NewBullet.GetComponent<BulletController>().Shooter = gameObject;
         barrelIndex = (barrelIndex + 1 < Barrels.Length) ? barrelIndex + 1 : 0;
 
         float timePassed = 0.0f;
@@ -71,12 +75,9 @@ public class StarShip : MonoBehaviour {
 
 	public void AddThrust(Vector3 direction)
 	{
-		float xVel = transform.InverseTransformDirection(shipRigidbody.velocity).x;
-        float yVel = transform.InverseTransformDirection(shipRigidbody.velocity).y;
-
-		if ((xVel + yVel) < MaxSpeed)
+        if (shipRigidbody.velocity.magnitude < MaxSpeed)
         {
-			shipRigidbody.AddForce(direction * Acceleration);
+            shipRigidbody.AddForce(direction * Acceleration);
         }
 	}
 
@@ -92,7 +93,7 @@ public class StarShip : MonoBehaviour {
 		float angleOffset;
 
         velocityAngle = shipRigidbody.velocity.normalized;
-        shipDirection = transform.position - Target.transform.position;
+        shipDirection = transform.position - Target;
         angleOffset = AngleFromAToB(velocityAngle, shipDirection);
 		if ((angleOffset > 0.0f && angleOffset < 180.0f))
         {
@@ -110,7 +111,7 @@ public class StarShip : MonoBehaviour {
 	{
 		Quaternion rotate;
 		
-		rotate = Quaternion.FromToRotation(Vector3.up, Target.transform.position - transform.position);
+		rotate = Quaternion.FromToRotation(Vector3.up, Target - transform.position);
         transform.localRotation = Quaternion.RotateTowards(transform.localRotation, rotate, TurnSpeed);
         transform.localEulerAngles = new Vector3(0.0f, 0.0f, transform.localEulerAngles.z);
 	}
@@ -138,12 +139,12 @@ public class StarShip : MonoBehaviour {
 	IEnumerator TransitionTarget(float time, Vector3 newPosition)
 	{
 	    float t = 0.0f;
-	    Vector3 startingPos = Target.transform.position;
+	    Vector3 startingPos = Target;
 	    while (t < time)
 	    {
 			t += Time.deltaTime * (Time.timeScale/time);
-			Target.transform.position = Vector3.Lerp(startingPos, newPosition, t);
-			Debug.DrawLine(startingPos, Target.transform.position ,Color.red);
+			Target = Vector3.Lerp(startingPos, newPosition, t);
+			Debug.DrawLine(startingPos, Target ,Color.red);
 			yield return 0;
 		}
 

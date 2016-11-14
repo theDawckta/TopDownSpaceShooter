@@ -64,7 +64,7 @@ public class ChaseState : IEnemyState
         Vector3 distance;
 
         enemy.WayPoints.Clear();
-        enemy.Target = enemy.Player.gameObject;
+        enemy.Target = enemy.Player.transform.position;
         distance = enemy.Player.gameObject.transform.position - enemy.transform.position;
         Debug.Log(distance.magnitude);
         if(distance.magnitude > 20)
@@ -75,7 +75,7 @@ public class ChaseState : IEnemyState
         {
             ToAttackState();
         }
-		Debug.DrawLine(enemy.chaseTarget.position, enemy.Target.transform.position, Color.green);
+		Debug.DrawLine(enemy.chaseTarget.position, enemy.Target, Color.green);
         enemy.MeshRendererFlag.material.color = Color.yellow;
     }
 }

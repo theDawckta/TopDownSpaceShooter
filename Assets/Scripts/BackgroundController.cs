@@ -6,7 +6,7 @@ public class BackgroundController : MonoBehaviour
 {
 	public List<GameObject> Backgrounds = new List<GameObject>();
 	public List<float> BackgroundSpeeds = new List<float>();
-
+    public int Scale;
     private Material[] backgroundMaterials;
 
 	void Start () 
@@ -18,7 +18,7 @@ public class BackgroundController : MonoBehaviour
 		backgroundMaterials = new Material[Backgrounds.Count];
 		for (int i = 0; i < Backgrounds.Count; i++)
         {
-            Backgrounds[i].transform.localScale = new Vector3(size, size, 0.0f);
+            Backgrounds[i].transform.localScale = new Vector3(size * Scale, size * Scale, 0.0f);
             backgroundMaterials[i] = Backgrounds[i].GetComponent<Renderer>().material;
         }
 	}
