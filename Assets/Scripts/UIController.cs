@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIController : MonoBehaviour 
 {
@@ -11,10 +12,12 @@ public class UIController : MonoBehaviour
     public EnemySpawnController EnemySpawn;
     public GameObject StartUI;
     public GameObject GameUI;
+    public Slider WarpSlider;
 
     void Start()
     {
         Player.OnPlayerDied += PlayerDied;
+        Player.OnPlayerFuelPickup += PlayerFuelPickup;
     }
 
     public void ReStart()
@@ -34,6 +37,16 @@ public class UIController : MonoBehaviour
         Player.DisablePlayer();
         GameUI.SetActive(false);
         StartUI.SetActive(true);
+    }
+
+    public void PlayerFuelPickup()
+    {
+		WarpSlider.value = Player.PlayerFuelLevel;
+		if(WarpSlider.value == 1)
+		{
+			End();
+			EnemySpawn.EndSpawn();
+		}
     }
 
     public void PlayerDied()

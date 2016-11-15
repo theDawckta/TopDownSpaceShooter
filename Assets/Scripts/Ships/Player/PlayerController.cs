@@ -7,8 +7,12 @@ public class PlayerController : StarShip
 {
     public delegate void OnPlayerDiedEvent();
     public event OnPlayerDiedEvent OnPlayerDied;
+	public delegate void OnPlayerFuelPickupEvent();
+    public event OnPlayerFuelPickupEvent OnPlayerFuelPickup;
     [HideInInspector]
     public bool PlayerEnabled = false;
+    [HideInInspector]
+    public float PlayerFuelLevel = 0.0f;
 
     private Vector3 originalPosition;
 
@@ -20,7 +24,7 @@ public class PlayerController : StarShip
 
     void Start()
     {
-       
+       DisablePlayer();
     }
 
     void Update()
@@ -52,8 +56,19 @@ public class PlayerController : StarShip
         if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
             Destroy(gameObject);
-
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+    }
+
+	void OnTriggerEnter2D(Collider2D collider)
+    {
+		if (collider.gameObject.layer == LayerMask.NameToLayer("Fuel"))
+        {
+        	Debug.Log("collided");
+			FuelController thisFuel = collider.gameObject.GetComponent<FuelController>();
+			PlayerFuelLevel = PlayerFuelLevel + thisFuel.Value;
+			thisFuel.Alive = false;
+			OnPlayerFuelPickup();
         }
     }
 

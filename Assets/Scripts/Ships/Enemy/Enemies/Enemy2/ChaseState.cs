@@ -66,7 +66,6 @@ public class ChaseState : IEnemyState
         enemy.WayPoints.Clear();
         enemy.Target = enemy.Player.transform.position;
         distance = enemy.Player.gameObject.transform.position - enemy.transform.position;
-        Debug.Log(distance.magnitude);
         if(distance.magnitude > 20)
         {
             enemy.AddThrust(enemy.transform.up);
