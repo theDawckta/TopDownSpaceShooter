@@ -14,7 +14,6 @@ public class ChaseState : IEnemyState
 
     public void UpdateState()
     {
-        Look();
         Chase();
     }
 
@@ -43,29 +42,11 @@ public class ChaseState : IEnemyState
 
     }
 
-    private void Look()
-    {
-        //RaycastHit hit;
-        //Vector3 enemyToTarget = (enemy.chaseTarget.position + enemy.Offset) - enemy.Eyes.transform.position;
-        //if (Physics.Raycast(enemy.Eyes.transform.position, enemyToTarget, out hit, enemy.SightRange) && hit.collider.CompareTag("Player"))
-        //{
-        //    enemy.chaseTarget = hit.transform;
-
-        //}
-        //else
-        //{
-        //    ToAlertState();
-        //}
-
-    }
-
     private void Chase()
     {
         Vector3 distance;
-
-        enemy.WayPoints.Clear();
-        enemy.Target = enemy.Player.transform.position;
-        distance = enemy.Player.gameObject.transform.position - enemy.transform.position;
+        
+        distance = enemy.Target - enemy.transform.position;
         if(distance.magnitude > 20)
         {
             enemy.AddThrust(enemy.transform.up);

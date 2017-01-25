@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour 
 {
-    private int Level;
-    private int Score;
-    private int KillCount;
+    //private int Level;
+    //private int Score;
+    //private int KillCount;
     public PlayerController Player;
     public EnemySpawnController EnemySpawn;
     public GameObject StartUI;
@@ -22,9 +22,9 @@ public class UIController : MonoBehaviour
 
     public void ReStart()
     {
-        Level = 1;
-        Score = 0;
-        KillCount = 0;
+        //Level = 1;
+        //Score = 0;
+        //KillCount = 0;
 
         Player.EnablePlayer();
         GameUI.SetActive(true);

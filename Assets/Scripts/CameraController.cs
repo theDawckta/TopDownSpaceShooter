@@ -6,20 +6,16 @@ public class CameraController : MonoBehaviour
 {
     public float ZoomOutMultiplier;
     public float CameraZoomSmoothTime;
+    public GameObject Subject;
 
     private float cameraOriginalSize;
-    private GameObject player;
-    private StarShip playerStarShip;
-    private float maxSize;
+    
     private Rigidbody2D playerRigidbody;
     private float cameraSizeVelocity;
 
     void Awake ()
     {
-        player = GameObject.FindWithTag("Player");
-        playerStarShip = player.GetComponent<StarShip>();
-        playerRigidbody = player.GetComponent<Rigidbody2D>();
-        maxSize = playerStarShip.MaxSpeed * ZoomOutMultiplier;
+        playerRigidbody = Subject.GetComponent<Rigidbody2D>(); 
     }
 
 	void Start () 
@@ -29,7 +25,7 @@ public class CameraController : MonoBehaviour
 
     void FixedUpdate()
     {
-        transform.position = new Vector3(player.transform.position.x, player.transform.position.y, transform.position.z);
+        transform.position = new Vector3(Subject.transform.position.x, Subject.transform.position.y, transform.position.z);
     }
 
     void Update ()

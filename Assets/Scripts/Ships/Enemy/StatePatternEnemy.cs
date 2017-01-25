@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class StatePatternEnemy : StarShip
 {
-    public List<Vector3> WayPoints = new List<Vector3>();
+    public Vector3 WayPoint = new Vector3();
     public float SearchingTurnSpeed = 12.0f;
     public float SearchingDuration = 4f;
     public float SightRange = 20f;
@@ -25,8 +25,6 @@ public class StatePatternEnemy : StarShip
     public PatrolState patrolState;
     [HideInInspector]
     public Rigidbody2D enemyRigidbody;
-    [HideInInspector]
-    public StarShip Player;
 
     protected override void Awake()
     {
@@ -38,16 +36,14 @@ public class StatePatternEnemy : StarShip
         base.Awake();
     }
 
-    void Start()
+    protected override void Start()
     {
-        WayPoints.Add(Target);
-        Player = GameObject.FindGameObjectWithTag("Player").GetComponent<StarShip>();
-        currentState = patrolState;
+        base.Start();
     }
 
-    void Update()
+    protected override void Update()
     {
-        currentState.UpdateState();
+        base.Update();
     }
 
     private void OnTriggerEnter(Collider other)

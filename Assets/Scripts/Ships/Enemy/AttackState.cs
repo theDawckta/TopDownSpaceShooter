@@ -12,7 +12,6 @@ public class AttackState : IEnemyState
 
     public void UpdateState()
     {
-        Look();
         Attack();
     }
 
@@ -58,7 +57,7 @@ public class AttackState : IEnemyState
     {
         Vector3 distance;
 
-        distance = enemy.Player.gameObject.transform.position - enemy.transform.position;
+        distance = enemy.Target - enemy.transform.position;
         if (distance.magnitude < 22)
         {
             enemy.FireGun();

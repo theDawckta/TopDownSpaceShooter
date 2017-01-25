@@ -22,12 +22,12 @@ public class PlayerController : StarShip
         base.Awake();
     }
 
-    void Start()
+    protected override void Start()
     {
        DisablePlayer();
     }
 
-    void Update()
+    protected override void Update()
     {
         if (Input.GetButton("Fire1"))
         {
@@ -64,7 +64,6 @@ public class PlayerController : StarShip
     {
 		if (collider.gameObject.layer == LayerMask.NameToLayer("Fuel"))
         {
-        	Debug.Log("collided");
 			FuelController thisFuel = collider.gameObject.GetComponent<FuelController>();
 			PlayerFuelLevel = PlayerFuelLevel + thisFuel.Value;
 			thisFuel.Alive = false;

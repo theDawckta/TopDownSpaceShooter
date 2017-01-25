@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StarShip : MonoBehaviour {
-
-	public float MaxSpeed = 10.0f;
+public class StarShip : MonoBehaviour
+{
+    public event EventHandler DeathEvent;
+    public float MaxSpeed = 10.0f;
 	public float Acceleration = 10.0f;
     public float TurnSpeed = 10.0f;
     public float HitPoints = 10.0f;
@@ -16,36 +17,38 @@ public class StarShip : MonoBehaviour {
 	public GameObject RollGameObject;
 
     [HideInInspector]
-    [NonSerialized]
-    public Vector3 Target;
-    [HideInInspector]
 	public Rigidbody2D shipRigidbody;
     [HideInInspector]
     public bool Alive;
     [HideInInspector]
     public bool firing = false;
+    [HideInInspector]
+    public Vector3 Target = new Vector3();
+    
     private int barrelIndex = 0;
 
     protected virtual void Awake()
 	{
-        Target = Vector3.zero;
 		shipRigidbody = transform.GetComponent<Rigidbody2D>();
         Alive = true;
 	}
 
-	void Start () 
+    protected virtual void Start () 
 	{
 		
 	}
 
-	void Update () 
-	{
-		
-	}
+    protected virtual void Update()
+    {
+        if (Alive == false)
+        {
+            Destroy(gameObject);
+        }
+    }
 
 	protected virtual void FixedUpdate()
 	{
-		AddRotation();
+        AddRotation();
 		AddRoll();
 	}
 
@@ -86,7 +89,13 @@ public class StarShip : MonoBehaviour {
 		StartCoroutine(TransitionTarget(time, newPosition));
 	}
 
-	void AddRoll()
+    protected void OnDeath()
+    {
+        DeathEvent(this, EventArgs.Empty);
+        Alive = false;
+    }
+
+    void AddRoll()
 	{
 		Vector3 velocityAngle;
         Vector2 shipDirection;
@@ -94,7 +103,7 @@ public class StarShip : MonoBehaviour {
 
         velocityAngle = shipRigidbody.velocity.normalized;
         shipDirection = transform.position - Target;
-        angleOffset = AngleFromAToB(velocityAngle, shipDirection);
+        angleOffset = UtilityFunctions.AngleFromAToB(velocityAngle, shipDirection);
 		if ((angleOffset > 0.0f && angleOffset < 180.0f))
         {
 			RollGameObject.transform.localEulerAngles = new Vector3(0.0f, -(180 - Mathf.Abs(angleOffset)), 0.0f);
@@ -103,8 +112,6 @@ public class StarShip : MonoBehaviour {
         {
 			RollGameObject.transform.localEulerAngles = new Vector3(0.0f, (180 - Mathf.Abs(angleOffset)), 0.0f);
         }
-
-		//Debug.Log( "direction: " + direction + "     velocityAngle" + velocityAngle + "     angle:" + RollRotation.transform.localEulerAngles.y);
 	}
 
 	void AddRotation()
@@ -128,38 +135,22 @@ public class StarShip : MonoBehaviour {
                 HitPoints = HitPoints - 1;
                 if (HitPoints <= 0)
                 {
-                    Alive = false;
-                    Debug.Log("ship down");
+                    OnDeath();
                 }
             }
-        }
-            
+        } 
     }
 
-	IEnumerator TransitionTarget(float time, Vector3 newPosition)
-	{
-	    float t = 0.0f;
-	    Vector3 startingPos = Target;
-	    while (t < time)
-	    {
-			t += Time.deltaTime * (Time.timeScale/time);
-			Target = Vector3.Lerp(startingPos, newPosition, t);
-			Debug.DrawLine(startingPos, Target ,Color.red);
-			yield return 0;
-		}
-
-	}
-
-	float AngleFromAToB(Vector3 angleA, Vector3 angleB)
+    IEnumerator TransitionTarget(float time, Vector3 newPosition)
     {
-        if (angleA == Vector3.zero || angleB == Vector3.zero)
-            return 0.0f;
-        Vector3 axis = new Vector3(0, 0, 1);
-        float angle = Vector3.Angle(angleA, angleB);
-        float sign = Mathf.Sign(Vector3.Dot(axis, Vector3.Cross(angleA, angleB)));
-
-        // angle in [-179,180]
-        float signed_angle = angle * sign;
-        return signed_angle;
+        float t = 0.0f;
+        Vector3 startingPos = Target;
+        while (t < time)
+        {
+            t += Time.deltaTime * (Time.timeScale / time);
+            Target = Vector3.Lerp(startingPos, newPosition, t);
+            Debug.DrawLine(startingPos, Target, Color.red);
+            yield return 0;
+        }
     }
 }

@@ -14,7 +14,6 @@ public class EvadeState : IEnemyState
 
     public void UpdateState()
     {
-        Look();
         Evade();
     }
 
@@ -40,22 +39,6 @@ public class EvadeState : IEnemyState
 
     public void ToChaseState()
     {
-
-    }
-
-    private void Look()
-    {
-        //RaycastHit hit;
-        //Vector3 enemyToTarget = (enemy.chaseTarget.position + enemy.Offset) - enemy.Eyes.transform.position;
-        //if (Physics.Raycast(enemy.Eyes.transform.position, enemyToTarget, out hit, enemy.SightRange) && hit.collider.CompareTag("Player"))
-        //{
-        //    enemy.chaseTarget = hit.transform;
-
-        //}
-        //else
-        //{
-        //    ToAlertState();
-        //}
 
     }
 
