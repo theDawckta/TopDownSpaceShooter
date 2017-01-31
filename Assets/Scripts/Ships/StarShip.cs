@@ -11,7 +11,7 @@ public class StarShip : MonoBehaviour
     public float TurnSpeed = 10.0f;
     public float HitPoints = 10.0f;
     public float GunCoolDown = 1.0f;
-    public ParticleSystem Engine;
+    public ParticleSystem[] Engines;
     public GameObject[] Barrels;
     public GameObject Bullet;
 	public GameObject RollGameObject;
@@ -81,6 +81,10 @@ public class StarShip : MonoBehaviour
         if (shipRigidbody.velocity.magnitude < MaxSpeed)
         {
             shipRigidbody.AddForce(direction * Acceleration);
+            for (int i = 0; i < Engines.Length; i++)
+            {
+                Engines[i].Emit(1);
+            }
         }
 	}
 
