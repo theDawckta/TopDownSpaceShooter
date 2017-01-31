@@ -37,7 +37,7 @@ public class PlayerController : StarShip
 
     protected override void FixedUpdate()
     {
-		Target = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
+		Target.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
 
 		if (Input.GetAxisRaw("Vertical") > 0)
         {
