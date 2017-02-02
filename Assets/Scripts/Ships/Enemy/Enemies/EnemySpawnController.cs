@@ -39,14 +39,14 @@ public class EnemySpawnController : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < EnemyStarShips.Count; i++)
-        {
-            if ((EnemyStarShips[i].transform.position - Player.transform.position).magnitude > EnemyRange)
-			{
-                EnemyStarShips[i].Alive = false;
-                EnemyStarShips.Remove(EnemyStarShips[i]);
-            }
-        }
+   //     for (int i = 0; i < EnemyStarShips.Count; i++)
+   //     {
+   //         if ((EnemyStarShips[i].transform.position - Player.transform.position).magnitude > EnemyRange)
+			//{
+   //             EnemyStarShips[i].Alive = false;
+   //             EnemyStarShips.Remove(EnemyStarShips[i]);
+   //         }
+   //     }
     }
 
     public StarShip SpawnEnemy()
@@ -56,7 +56,6 @@ public class EnemySpawnController : MonoBehaviour
         Vector3 direction = new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), 0.0f).normalized;
         GameObject newEnemy = (GameObject)Instantiate(EnemyList[_enemyIndex], Player.transform.position + direction * dist, Quaternion.Euler(new Vector3(0.0f, 0.0f, angle)));
         StarShip enemyStarShip = newEnemy.GetComponent<StarShip>();
-        enemyStarShip.Target = Player.transform.position;
         enemyStarShip.DeathEvent += EnemyStarShip_DeathEvent;
         EnemyStarShips.Add(enemyStarShip);
         _enemyIndex = (_enemyIndex + 1 < EnemyList.Count) ? _enemyIndex + 1 : 0;

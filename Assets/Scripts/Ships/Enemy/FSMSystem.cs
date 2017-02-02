@@ -52,10 +52,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 public enum Transition
 {
     NullTransition = 0, // Use this transition to represent a non-existing transition in your system
-    SawPlayer = 1,
-    ChasingPlayer = 2,
-    LostPlayer = 3,
-    FollowingPath = 4
+    PlayerInRange = 1,
+    PlayerOutOfRange = 2
 }
 
 /// <summary>
@@ -65,10 +63,8 @@ public enum Transition
 public enum StateID
 {
     NullStateID = 0, // Use this ID to represent a non-existing State in your system	
-    SawPlayer = 1,
-    ChasingPlayer = 2,
-    LostPlayer = 3,
-    FollowingPath = 4
+    AttackPlayer = 1,
+    ChasePlayer = 2
 }
 
 
@@ -197,7 +193,5 @@ public class FSMSystem
                 break;
             }
         }
-
-    } // PerformTransition()
-
-} //class FSMSystem
+    }
+}

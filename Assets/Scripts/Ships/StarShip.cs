@@ -11,7 +11,6 @@ public class StarShip : MonoBehaviour
     public float TurnSpeed = 10.0f;
     public float HitPoints = 10.0f;
     public float GunCoolDown = 1.0f;
-    public ParticleSystem[] Engines;
     public GameObject[] Barrels;
     public GameObject Bullet;
 	public GameObject RollGameObject;
@@ -23,13 +22,16 @@ public class StarShip : MonoBehaviour
     [HideInInspector]
     public bool firing = false;
     [HideInInspector]
-    public GameObject Target;
-    
+    public GameObject StarShipTarget;
+
     private int barrelIndex = 0;
 
     protected virtual void Awake()
 	{
 		shipRigidbody = transform.GetComponent<Rigidbody2D>();
+        StarShipTarget = new GameObject();
+        StarShipTarget.name = "StarShipTarget";
+        StarShipTarget.transform.parent = this.transform;
         Alive = true;
 	}
 
@@ -76,7 +78,15 @@ public class StarShip : MonoBehaviour
         firing = false;
     }
 
-	public void AddThrust(Vector3 direction)
+    public void AddThrust(Vector3 direction)
+    {
+        if (shipRigidbody.velocity.magnitude < MaxSpeed)
+        {
+            shipRigidbody.AddForce(direction * Acceleration);
+        }
+    }
+
+    public void AddThrust(Vector3 direction, ParticleSystem[] Engines)
 	{
         if (shipRigidbody.velocity.magnitude < MaxSpeed)
         {
@@ -106,7 +116,7 @@ public class StarShip : MonoBehaviour
 		float angleOffset;
 
         velocityAngle = shipRigidbody.velocity.normalized;
-        shipDirection = transform.position - Target.transform.position;
+        shipDirection = transform.position - StarShipTarget.transform.position;
         angleOffset = UtilityFunctions.AngleFromAToB(velocityAngle, shipDirection);
 		if ((angleOffset > 0.0f && angleOffset < 180.0f))
         {
@@ -122,7 +132,7 @@ public class StarShip : MonoBehaviour
 	{
 		Quaternion rotate;
 		
-		rotate = Quaternion.FromToRotation(Vector3.up, Target.transform.position - transform.position);
+		rotate = Quaternion.FromToRotation(Vector3.up, StarShipTarget.transform.position - transform.position);
         transform.localRotation = Quaternion.RotateTowards(transform.localRotation, rotate, TurnSpeed);
         transform.localEulerAngles = new Vector3(0.0f, 0.0f, transform.localEulerAngles.z);
 	}
@@ -148,12 +158,12 @@ public class StarShip : MonoBehaviour
     IEnumerator TransitionTarget(float time, Vector3 newPosition)
     {
         float t = 0.0f;
-        Vector3 startingPos = Target.transform.position;
+        Vector3 startingPos = StarShipTarget.transform.position;
         while (t < time)
         {
             t += Time.deltaTime * (Time.timeScale / time);
-            Target.transform.position = Vector3.Lerp(startingPos, newPosition, t);
-            Debug.DrawLine(startingPos, Target.transform.position, Color.red);
+            StarShipTarget.transform.position = Vector3.Lerp(startingPos, newPosition, t);
+            Debug.DrawLine(startingPos, StarShipTarget.transform.position, Color.red);
             yield return 0;
         }
     }

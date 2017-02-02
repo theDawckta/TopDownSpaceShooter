@@ -98,13 +98,13 @@ public abstract class FSMState
     /// This method decides if the state should transition to another on its list
     /// NPC is a reference to the object that is controlled by this class
     /// </summary>
-    public abstract void Reason(GameObject player, StarShip npc);
+    public abstract void Reason(StarShip player, StarShip npc);
 
     /// <summary>
     /// This method controls the behavior of the NPC in the game World.
     /// Every action, movement or communication the NPC does should be placed here
     /// NPC is a reference to the object that is controlled by this class
     /// </summary>
-    public abstract void Act(GameObject player, StarShip npc);
+    public abstract void Act(StarShip player, StarShip npc);
 
 } // class FSMState

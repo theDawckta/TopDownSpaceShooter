@@ -6,33 +6,21 @@ public class ChasePlayerState : FSMState
 {
     public ChasePlayerState()
     {
-        stateID = StateID.ChasingPlayer;
+        stateID = StateID.ChasePlayer;
     }
 
-    public override void Reason(GameObject player, StarShip npc)
+    public override void Reason(StarShip player, StarShip npc)
     {
-        // If the player has gone 30 meters away from the NPC, fire LostPlayer transition
-        if (Vector3.Distance(npc.transform.position, player.transform.position) >= 30)
-            npc.GetComponent<Enemy3>().SetTransition(Transition.LostPlayer);
+        // If the player is within 30 meters away from the NPC, fire PlayerInRange transition
+        Debug.Log(Vector3.Distance(npc.transform.position, player.transform.position));
+        if (Vector3.Distance(npc.transform.position, player.transform.position) <= 30)
+            npc.GetComponent<Enemy3>().SetTransition(Transition.PlayerInRange);
     }
 
-    public override void Act(GameObject player, StarShip npc)
+    public override void Act(StarShip player, StarShip npc)
     {
-        // Follow the path of waypoints
-        // Find the direction of the player 		
-        Vector3 vel = npc.GetComponent<Rigidbody2D>().velocity;
-        Vector3 moveDir = player.transform.position - npc.transform.position;
-
-        // Rotate towards the waypoint
-        npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation,
-                                                  Quaternion.LookRotation(moveDir),
-                                                  5 * Time.deltaTime);
-        npc.transform.eulerAngles = new Vector3(0, npc.transform.eulerAngles.y, 0);
-
-        vel = moveDir.normalized * 10;
-
-        // Apply the new Velocity
-        npc.GetComponent<Rigidbody2D>().velocity = vel;
+        Debug.Log("Chasing");
+        npc.StarShipTarget.transform.position = player.transform.position + (player.transform.up * player.shipRigidbody.velocity.magnitude);
+        npc.AddThrust(npc.transform.up);
     }
-
-} // ChasePlayerState
+}

@@ -9,6 +9,10 @@ public class PlayerController : StarShip
     public event OnPlayerDiedEvent OnPlayerDied;
 	public delegate void OnPlayerFuelPickupEvent();
     public event OnPlayerFuelPickupEvent OnPlayerFuelPickup;
+
+    public ParticleSystem[] FrontEngines;
+    public ParticleSystem[] RearEngines;
+
     [HideInInspector]
     public bool PlayerEnabled = false;
     [HideInInspector]
@@ -37,15 +41,15 @@ public class PlayerController : StarShip
 
     protected override void FixedUpdate()
     {
-		Target.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
+		StarShipTarget.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
 
 		if (Input.GetAxisRaw("Vertical") > 0)
         {
-            base.AddThrust(transform.up);
+            base.AddThrust(transform.up, RearEngines);
         }
         else if (Input.GetAxisRaw("Vertical") < 0)
         {
-            base.AddThrust(-transform.up);
+            base.AddThrust(-transform.up, FrontEngines);
         }
 
         base.FixedUpdate();
