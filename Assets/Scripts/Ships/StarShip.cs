@@ -86,17 +86,17 @@ public class StarShip : MonoBehaviour
         }
     }
 
-    public void AddThrust(Vector3 direction, ParticleSystem[] Engines)
-	{
-        if (shipRigidbody.velocity.magnitude < MaxSpeed)
+    public void AddThrust(ParticleSystem[] Engines)
+    {
+        for (int i = 0; i < Engines.Length; i++)
         {
-            shipRigidbody.AddForce(direction * Acceleration);
-            for (int i = 0; i < Engines.Length; i++)
+            shipRigidbody.AddForce(-Engines[i].transform.forward * Acceleration);
+            for (int j = 0; j < Engines.Length; j++)
             {
-                Engines[i].Emit(1);
+                Engines[j].Emit(1);
             }
         }
-	}
+    }
 
 	public void MoveTarget(float time, Vector3 newPosition)
 	{

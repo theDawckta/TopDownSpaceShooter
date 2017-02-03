@@ -12,6 +12,8 @@ public class PlayerController : StarShip
 
     public ParticleSystem[] FrontEngines;
     public ParticleSystem[] RearEngines;
+    public ParticleSystem[] RearRightEngines;
+    public ParticleSystem[] RearLeftEngines;
 
     [HideInInspector]
     public bool PlayerEnabled = false;
@@ -43,15 +45,14 @@ public class PlayerController : StarShip
     {
 		StarShipTarget.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
 
-		if (Input.GetAxisRaw("Vertical") > 0)
-        {
-            base.AddThrust(transform.up, RearEngines);
-        }
-        else if (Input.GetAxisRaw("Vertical") < 0)
-        {
-            base.AddThrust(-transform.up, FrontEngines);
-        }
-
+		if (Input.GetKey(KeyCode.W))
+            base.AddThrust(RearEngines);
+        if (Input.GetKey(KeyCode.S))
+            base.AddThrust(FrontEngines);
+        if (Input.GetKey(KeyCode.D))
+            base.AddThrust(RearRightEngines);
+        if (Input.GetKey(KeyCode.A))
+            base.AddThrust(RearLeftEngines);
         base.FixedUpdate();
    	}
 
