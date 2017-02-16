@@ -16,11 +16,11 @@ public class StarShip : MonoBehaviour
 	public GameObject RollGameObject;
 
     [HideInInspector]
-	public Rigidbody2D shipRigidbody;
+	public Rigidbody2D ShipRigidbody;
     [HideInInspector]
     public bool Alive;
     [HideInInspector]
-    public bool firing = false;
+    public bool Firing = false;
     [HideInInspector]
     public GameObject StarShipTarget;
 
@@ -28,7 +28,7 @@ public class StarShip : MonoBehaviour
 
     protected virtual void Awake()
 	{
-		shipRigidbody = transform.GetComponent<Rigidbody2D>();
+		ShipRigidbody = transform.GetComponent<Rigidbody2D>();
         StarShipTarget = new GameObject();
         StarShipTarget.name = "StarShipTarget";
         StarShipTarget.transform.parent = this.transform;
@@ -56,13 +56,13 @@ public class StarShip : MonoBehaviour
 
     public void FireGun()
     {
-        if(!firing)
+        if(!Firing)
             StartCoroutine("FireGunCoroutine");
     }
 
     IEnumerator FireGunCoroutine()
     {
-        firing = true;
+        Firing = true;
 
         GameObject NewBullet = (GameObject)Instantiate(Bullet, Barrels[barrelIndex].transform.position, Barrels[barrelIndex].transform.rotation);
         NewBullet.GetComponent<BulletController>().Shooter = gameObject;
@@ -75,14 +75,14 @@ public class StarShip : MonoBehaviour
             yield return null;
         }
 
-        firing = false;
+        Firing = false;
     }
 
     public void AddThrust(Vector3 direction)
     {
-        if (shipRigidbody.velocity.magnitude < MaxSpeed)
+        if (ShipRigidbody.velocity.magnitude < MaxSpeed)
         {
-            shipRigidbody.AddForce(direction * Acceleration);
+            ShipRigidbody.AddForce(direction * Acceleration);
         }
     }
 
@@ -90,10 +90,10 @@ public class StarShip : MonoBehaviour
     {
         for (int i = 0; i < Engines.Length; i++)
         {
-            shipRigidbody.AddForce(-Engines[i].transform.forward * Acceleration);
+            ShipRigidbody.AddForce(-Engines[i].transform.forward * Acceleration);
             for (int j = 0; j < Engines.Length; j++)
             {
-                Engines[j].Emit(1);
+                Engines[j].Emit(5);
             }
         }
     }
@@ -115,7 +115,7 @@ public class StarShip : MonoBehaviour
         Vector2 shipDirection;
 		float angleOffset;
 
-        velocityAngle = shipRigidbody.velocity.normalized;
+        velocityAngle = ShipRigidbody.velocity.normalized;
         shipDirection = transform.position - StarShipTarget.transform.position;
         angleOffset = UtilityFunctions.AngleFromAToB(velocityAngle, shipDirection);
 		if ((angleOffset > 0.0f && angleOffset < 180.0f))

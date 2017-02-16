@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class Enemy3 : StarShip
 {
+    public GameObject EnemyTarget;
+
     private List<StarShip> _players = new List<StarShip>();
     private StarShip _playerTarget;
     private FSMSystem _fsm;
@@ -34,6 +36,7 @@ public class Enemy3 : StarShip
     {
         _fsm.CurrentState.Reason(_playerTarget, this);
         _fsm.CurrentState.Act(_playerTarget, this);
+        EnemyTarget.transform.position = StarShipTarget.transform.position;
         base.FixedUpdate();
     }
 
@@ -52,9 +55,15 @@ public class Enemy3 : StarShip
 
         AttackPlayerState attack = new AttackPlayerState();
         attack.AddTransition(Transition.PlayerOutOfRange, StateID.ChasePlayer);
-        
+        attack.AddTransition(Transition.PlayerInsideOfRange, StateID.RunFromPlayer);
+
+        RunFromPlayerState run = new RunFromPlayerState();
+        run.AddTransition(Transition.EnemySafe, StateID.ChasePlayer);
+
+
         _fsm = new FSMSystem();
         _fsm.AddState(chase);
         _fsm.AddState(attack);
+        _fsm.AddState(run);
     }
 }
