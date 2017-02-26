@@ -13,7 +13,7 @@ public class BackgroundController : MonoBehaviour
     {
         float height = 2f * Camera.main.orthographicSize;
         float width = height * Camera.main.aspect;
-        float size = (height > width) ? height : width;
+        float size = (height > width) ? height * 2 : width * 2;
 
 		backgroundMaterials = new Material[Backgrounds.Count];
 		for (int i = 0; i < Backgrounds.Count; i++)
