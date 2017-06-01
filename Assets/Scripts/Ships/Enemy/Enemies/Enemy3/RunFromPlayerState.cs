@@ -17,7 +17,6 @@ public class RunFromPlayerState : FSMState
 
     public override void Act(StarShip player, StarShip npc)
     {
-        Debug.Log("Running");
         npc.StarShipTarget.transform.position = npc.transform.up + (npc.transform.position - player.transform.position);
         npc.AddThrust(npc.transform.up);
     }

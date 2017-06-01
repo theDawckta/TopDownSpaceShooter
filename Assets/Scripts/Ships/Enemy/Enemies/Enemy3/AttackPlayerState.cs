@@ -19,7 +19,6 @@ public class AttackPlayerState : FSMState
 
     public override void Act(StarShip player, StarShip npc)
     {
-        Debug.Log("Attacking");
         npc.StarShipTarget.transform.position = player.transform.position;
         npc.FireGun();
     }
