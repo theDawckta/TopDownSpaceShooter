@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class Enemy3 : StarShip
 {
-    public GameObject EnemyTarget;
-
     private List<StarShip> _players = new List<StarShip>();
     private StarShip _playerTarget;
     private FSMSystem _fsm;
@@ -33,7 +31,6 @@ public class Enemy3 : StarShip
     {
         _fsm.CurrentState.Reason(_playerTarget, this);
         _fsm.CurrentState.Act(_playerTarget, this);
-        EnemyTarget.transform.position = StarShipTarget.transform.position;
         base.FixedUpdate();
     }
 
