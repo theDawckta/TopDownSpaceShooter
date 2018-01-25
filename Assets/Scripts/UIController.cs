@@ -18,6 +18,7 @@ public class UIController : MonoBehaviour
     {
         Player.OnPlayerDied += PlayerDied;
         Player.OnPlayerFuelPickup += PlayerFuelPickup;
+        Player.EnablePlayer();
     }
 
     public void ReStart()

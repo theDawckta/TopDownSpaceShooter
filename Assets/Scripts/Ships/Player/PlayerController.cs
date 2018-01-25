@@ -28,11 +28,6 @@ public class PlayerController : StarShip
         base.Awake();
     }
 
-    protected override void Start()
-    {
-       DisablePlayer();
-    }
-
     protected override void Update()
     {
         if (Input.GetButton("Fire1"))
