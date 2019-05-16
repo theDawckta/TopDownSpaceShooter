@@ -10,6 +10,7 @@ public class StarShip : MonoBehaviour
     public float TurnSpeed = 10.0f;
     public float HitPoints = 10.0f;
     public float GunCoolDown = 1.0f;
+    public float rollSmooth = 0.3f;
     public GameObject[] Barrels;
     public GameObject Bullet;
 	public GameObject RollGameObject;
@@ -24,6 +25,8 @@ public class StarShip : MonoBehaviour
     public GameObject StarShipTarget;
 
     private int barrelIndex = 0;
+    private float yVelocity = 0.0f;
+    private float newYAngle = 0.0f;
 
     protected virtual void Awake()
 	{
@@ -50,8 +53,11 @@ public class StarShip : MonoBehaviour
 	protected virtual void FixedUpdate()
 	{
         AddRotation();
-		AddRoll();
-	}
+
+		Vector3 newRollTarget = GetRollTargetAngles();
+        newYAngle = Mathf.SmoothDampAngle(RollGameObject.transform.localEulerAngles.y, newRollTarget.y, ref yVelocity, rollSmooth);
+        RollGameObject.transform.localEulerAngles = new Vector3(newRollTarget.x, newYAngle, newRollTarget.z);
+    }
 
     public void FireGun()
     {
@@ -108,7 +114,7 @@ public class StarShip : MonoBehaviour
         Alive = false;
     }
 
-    void AddRoll()
+    private Vector3 GetRollTargetAngles()
 	{
 		Vector3 velocityAngle;
         Vector2 shipDirection;
@@ -117,13 +123,14 @@ public class StarShip : MonoBehaviour
         velocityAngle = ShipRigidbody.velocity.normalized;
         shipDirection = transform.position - StarShipTarget.transform.position;
         angleOffset = UtilityFunctions.AngleFromAToB(velocityAngle, shipDirection);
+
 		if ((angleOffset > 0.0f && angleOffset < 180.0f))
         {
-			RollGameObject.transform.localEulerAngles = new Vector3(0.0f, -(180 - Mathf.Abs(angleOffset)), 0.0f);
+			return new Vector3(0.0f, -(180 - Mathf.Abs(angleOffset)), 0.0f);
         }
-		else if ((angleOffset < 0.0f && angleOffset > -180.0f))
+		else
         {
-			RollGameObject.transform.localEulerAngles = new Vector3(0.0f, (180 - Mathf.Abs(angleOffset)), 0.0f);
+			return new Vector3(0.0f, (180 - Mathf.Abs(angleOffset)), 0.0f);
         }
 	}
 
