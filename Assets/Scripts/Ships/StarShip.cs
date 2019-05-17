@@ -143,7 +143,7 @@ public class StarShip : MonoBehaviour
         transform.localEulerAngles = new Vector3(0.0f, 0.0f, transform.localEulerAngles.z);
 	}
 
-    void OnCollisionEnter2D(Collision2D collision)
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
         BulletController bullet;
 
