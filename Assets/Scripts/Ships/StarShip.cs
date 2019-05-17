@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class StarShip : MonoBehaviour
 {
-    public event EventHandler DeathEvent;
+    public delegate void OnDeathEvent(StarShip ship);
+    public event OnDeathEvent OnDeath;
+
     public float MaxSpeed = 10.0f;
 	public float Acceleration = 10.0f;
     public float TurnSpeed = 10.0f;
-    public float HitPoints = 10.0f;
+    public float HitPoints = 5.0f;
     public float GunCoolDown = 1.0f;
     public float rollSmooth = 0.3f;
     public GameObject[] Barrels;
@@ -18,7 +20,7 @@ public class StarShip : MonoBehaviour
     [HideInInspector]
 	public Rigidbody2D ShipRigidbody;
     [HideInInspector]
-    public bool Alive;
+    public Collider2D ShipCollider;
     [HideInInspector]
     public bool Firing = false;
     [HideInInspector]
@@ -27,15 +29,17 @@ public class StarShip : MonoBehaviour
     private int barrelIndex = 0;
     private float yVelocity = 0.0f;
     private float newYAngle = 0.0f;
+    private float _hitPoints = 0.0f;
 
     protected virtual void Awake()
 	{
 		ShipRigidbody = transform.GetComponent<Rigidbody2D>();
+        ShipCollider = transform.GetComponent<Collider2D>();
         StarShipTarget = new GameObject();
         StarShipTarget.name = "StarShipTarget";
         StarShipTarget.transform.parent = this.transform;
-        Alive = true;
-	}
+        _hitPoints = HitPoints;
+    }
 
     protected virtual void Start () 
 	{
@@ -44,10 +48,7 @@ public class StarShip : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (Alive == false)
-        {
-            Destroy(gameObject);
-        }
+
     }
 
 	protected virtual void FixedUpdate()
@@ -108,12 +109,6 @@ public class StarShip : MonoBehaviour
 		StartCoroutine(TransitionTarget(time, newPosition));
 	}
 
-    protected void OnDeath()
-    {
-        DeathEvent(this, EventArgs.Empty);
-        Alive = false;
-    }
-
     private Vector3 GetRollTargetAngles()
 	{
 		Vector3 velocityAngle;
@@ -152,10 +147,12 @@ public class StarShip : MonoBehaviour
             bullet = collision.collider.transform.GetComponent<BulletController>();
             if(LayerMask.LayerToName(bullet.Shooter.gameObject.layer) != LayerMask.LayerToName(gameObject.layer))
             {
-                HitPoints = HitPoints - 1;
-                if (HitPoints <= 0)
+                _hitPoints = _hitPoints - 1;
+                if (_hitPoints <= 0)
                 {
-                    OnDeath();
+                    ShipCollider.enabled = false;
+                    OnDeath(this);
+                    _hitPoints = HitPoints;
                 }
             }
         } 

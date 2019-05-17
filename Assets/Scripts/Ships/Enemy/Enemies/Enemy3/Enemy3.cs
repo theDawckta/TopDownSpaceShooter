@@ -34,6 +34,11 @@ public class Enemy3 : StarShip
         base.FixedUpdate();
     }
 
+    void EnemyDied(StarShip ship)
+    {
+
+    }
+
     public void SetTransition(Transition t)
     {
         _fsm.PerformTransition(t);
@@ -59,5 +64,15 @@ public class Enemy3 : StarShip
         _fsm.AddState(chase);
         _fsm.AddState(attack);
         _fsm.AddState(run);
+    }
+
+    public void OnEnable()
+    {
+        base.OnDeath += EnemyDied;
+    }
+
+    public void OnDisable()
+    {
+        base.OnDeath -= EnemyDied;
     }
 }

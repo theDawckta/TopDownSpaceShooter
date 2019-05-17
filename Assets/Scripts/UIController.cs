@@ -16,28 +16,26 @@ public class UIController : MonoBehaviour
 
     void Start()
     {
-        Player.OnPlayerDied += PlayerDied;
         Player.OnPlayerFuelPickup += PlayerFuelPickup;
         Player.EnablePlayer();
     }
 
-    public void ReStart()
+    public void GameOn()
     {
         //Level = 1;
         //Score = 0;
         //KillCount = 0;
 
-        Player.EnablePlayer();
         GameUI.SetActive(true);
         StartUI.SetActive(false);
-        EnemySpawn.StartSpawn();
+        WarpSlider.value = 0.0f;
     }
 
-    public void End()
+    public void GameOff()
     {
-        Player.DisablePlayer();
         GameUI.SetActive(false);
         StartUI.SetActive(true);
+        WarpSlider.value = 0.0f;
     }
 
     public void PlayerFuelPickup()
@@ -45,14 +43,8 @@ public class UIController : MonoBehaviour
 		WarpSlider.value = Player.PlayerFuelLevel;
 		if(WarpSlider.value == 1)
 		{
-			End();
+            GameOff();
 			EnemySpawn.EndSpawn();
 		}
-    }
-
-    public void PlayerDied()
-    {
-        End();
-        EnemySpawn.EndSpawn();
     }
 }

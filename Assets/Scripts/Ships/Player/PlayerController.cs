@@ -5,9 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : StarShip
 {
-    public delegate void OnPlayerDiedEvent();
-    public event OnPlayerDiedEvent OnPlayerDied;
-	public delegate void OnPlayerFuelPickupEvent();
+    public delegate void OnPlayerFuelPickupEvent();
     public event OnPlayerFuelPickupEvent OnPlayerFuelPickup;
 
     public ParticleSystem[] FrontEngines;
@@ -58,6 +56,8 @@ public class PlayerController : StarShip
             Destroy(gameObject);
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
+
+        base.OnCollisionEnter2D(collision);
     }
 
 	void OnTriggerEnter2D(Collider2D collider)
@@ -71,10 +71,9 @@ public class PlayerController : StarShip
         }
     }
 
-    IEnumerator PlayerDied()
+    void PlayerDied(StarShip ship)
     {
-        OnPlayerDied();
-        yield return null;
+        
     }
 
     public void EnablePlayer()
@@ -86,5 +85,15 @@ public class PlayerController : StarShip
     {
         gameObject.SetActive(false);
         gameObject.transform.position = originalPosition;
+    }
+
+    public void OnEnable()
+    {
+        base.OnDeath += PlayerDied;
+    }
+
+    public void OnDisable()
+    {
+        base.OnDeath -= PlayerDied;
     }
 }
