@@ -145,7 +145,7 @@ public class StarShip : MonoBehaviour
         if (LayerMask.LayerToName(collision.collider.gameObject.layer) == "EnemyBullet" || LayerMask.LayerToName(collision.collider.gameObject.layer) == "PlayerBullet")
         {
             bullet = collision.collider.transform.GetComponent<BulletController>();
-            if(LayerMask.LayerToName(bullet.Shooter.gameObject.layer) != LayerMask.LayerToName(gameObject.layer))
+            if(bullet.Shooter != null && LayerMask.LayerToName(bullet.Shooter.gameObject.layer) != LayerMask.LayerToName(gameObject.layer))
             {
                 _hitPoints = _hitPoints - 1;
                 if (_hitPoints <= 0)

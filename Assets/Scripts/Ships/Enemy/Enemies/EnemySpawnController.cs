@@ -66,6 +66,7 @@ public class EnemySpawnController : MonoBehaviour
     private void EnemyStarShipDeath(StarShip enemy)
     {
         EnemyStarShips.Remove(enemy);
+        Destroy(enemy.gameObject);
         OnEnemyStarShipDeathEvent(enemy);
     }
 
