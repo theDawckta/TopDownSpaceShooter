@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraController : MonoBehaviour 
 {
@@ -10,12 +8,12 @@ public class CameraController : MonoBehaviour
 
     private float cameraOriginalSize;
     
-    private Rigidbody2D playerRigidbody;
+    private Rigidbody playerRigidbody;
     private float cameraSizeVelocity;
 
     void Awake ()
     {
-        playerRigidbody = Subject.GetComponent<Rigidbody2D>(); 
+        playerRigidbody = Subject.GetComponent<Rigidbody>(); 
     }
 
 	void Start () 
@@ -25,12 +23,12 @@ public class CameraController : MonoBehaviour
 
     void FixedUpdate()
     {
-        transform.position = new Vector3(Subject.transform.position.x, Subject.transform.position.y, transform.position.z);
+        transform.position = new Vector3(Subject.transform.position.x, transform.position.y, Subject.transform.position.z);
     }
 
     void Update ()
     {
-        float newSize = cameraOriginalSize + (playerRigidbody.velocity.magnitude * ZoomOutMultiplier);
-        Camera.main.orthographicSize = Mathf.SmoothDamp(Camera.main.orthographicSize, newSize, ref cameraSizeVelocity, CameraZoomSmoothTime);
+        //var newSize = cameraOriginalSize + (playerRigidbody.velocity.magnitude * ZoomOutMultiplier);
+        //Camera.main.orthographicSize = Mathf.SmoothDamp(Camera.main.orthographicSize, newSize, ref cameraSizeVelocity, CameraZoomSmoothTime);
     }
 }

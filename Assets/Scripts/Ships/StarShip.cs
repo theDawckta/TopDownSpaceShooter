@@ -18,9 +18,9 @@ public class StarShip : MonoBehaviour
 	public GameObject RollGameObject;
 
     [HideInInspector]
-	public Rigidbody2D ShipRigidbody;
+	public Rigidbody ShipRigidbody;
     [HideInInspector]
-    public Collider2D ShipCollider;
+    public Collider ShipCollider;
     [HideInInspector]
     public bool Firing = false;
     [HideInInspector]
@@ -33,8 +33,8 @@ public class StarShip : MonoBehaviour
 
     protected virtual void Awake()
 	{
-		ShipRigidbody = transform.GetComponent<Rigidbody2D>();
-        ShipCollider = transform.GetComponent<Collider2D>();
+		ShipRigidbody = transform.GetComponent<Rigidbody>();
+        ShipCollider = transform.GetComponent<Collider>();
         StarShipTarget = new GameObject();
         StarShipTarget.name = "StarShipTarget";
         StarShipTarget.transform.parent = this.transform;

@@ -12,7 +12,7 @@ public class BackgroundController : MonoBehaviour
 
     void Start () 
     {
-        _backgroundMaterials = new Material[Backgrounds.Count];
+        _backgroundMaterials = new Material[Backgrounds.Count]; 
         for (int i = 0; i < Backgrounds.Count; i++)
         {
             _backgroundMaterials[i] = Backgrounds[i].GetComponent<Renderer>().material;
