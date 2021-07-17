@@ -1,6 +1,7 @@
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
+Thumbs.db.meta
 
 # Folder config file
 Desktop.ini
@@ -53,6 +54,7 @@ Temporary Items
 [Oo]bj/
 [Bb]uild
 [Ll]ibrary/
+[Ll]ogs/
 sysinfo.txt
 *.stackdump
  

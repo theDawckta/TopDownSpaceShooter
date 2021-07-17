@@ -6,7 +6,7 @@ public static class UtilityFunctions
     {
         if (angleA == Vector3.zero || angleB == Vector3.zero)
             return 0.0f;
-        Vector3 axis = new Vector3(0, 1, 0);
+        Vector3 axis = new Vector3(1, 0, 0);
         float angle = Vector3.Angle(angleA, angleB);
         float sign = Mathf.Sign(Vector3.Dot(axis, Vector3.Cross(angleA, angleB)));
 

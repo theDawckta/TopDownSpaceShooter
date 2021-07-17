@@ -24,7 +24,7 @@ public class BackgroundController : MonoBehaviour
         transform.position = Subject.transform.position;
         for (int i = 0; i < _backgroundMaterials.Length; i++)
         {
-            Vector2 offset = new Vector2(Subject.transform.position.x / Backgrounds[i].transform.localScale.x, Subject.transform.position.y / Backgrounds[i].transform.localScale.y);
+            Vector2 offset = new Vector2(Subject.transform.position.x / Backgrounds[i].transform.localScale.x, Subject.transform.position.z / Backgrounds[i].transform.localScale.y);
 			_backgroundMaterials[i].SetTextureOffset("_MainTex", new Vector2((offset.x) * BackgroundSpeeds[i], (offset.y) * BackgroundSpeeds[i]));
           	_backgroundMaterials[i].SetTextureOffset("_BumpMap", new Vector2((offset.x) * BackgroundSpeeds[i], (offset.y) * BackgroundSpeeds[i]));
 

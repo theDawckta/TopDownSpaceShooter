@@ -18,7 +18,7 @@ public class CameraController : MonoBehaviour
 
 	void Start () 
     {
-        cameraOriginalSize = Camera.main.orthographicSize;
+        cameraOriginalSize = Camera.main.fieldOfView;
 	}
 
     void FixedUpdate()
@@ -28,7 +28,7 @@ public class CameraController : MonoBehaviour
 
     void Update ()
     {
-        //var newSize = cameraOriginalSize + (playerRigidbody.velocity.magnitude * ZoomOutMultiplier);
-        //Camera.main.orthographicSize = Mathf.SmoothDamp(Camera.main.orthographicSize, newSize, ref cameraSizeVelocity, CameraZoomSmoothTime);
+        var newSize = cameraOriginalSize + (playerRigidbody.velocity.magnitude * ZoomOutMultiplier);
+        Camera.main.fieldOfView = Mathf.SmoothDamp(Camera.main.fieldOfView, newSize, ref cameraSizeVelocity, CameraZoomSmoothTime);
     }
 }

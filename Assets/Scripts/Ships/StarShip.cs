@@ -26,6 +26,8 @@ public class StarShip : MonoBehaviour
     [HideInInspector]
     public GameObject StarShipTarget;
 
+    private Vector3 _positionYZerodOut;
+    private Vector3 _targetPositionYZerodOut;
     private int barrelIndex = 0;
     private float yVelocity = 0.0f;
     private float newYAngle = 0.0f;
@@ -55,9 +57,9 @@ public class StarShip : MonoBehaviour
 	{
         AddRotation();
 
-		//Vector3 newRollTarget = GetRollTargetAngles();
-  //      newYAngle = Mathf.SmoothDampAngle(RollGameObject.transform.localEulerAngles.y, newRollTarget.y, ref yVelocity, rollSmooth);
-  //      RollGameObject.transform.localEulerAngles = new Vector3(newRollTarget.x, newYAngle, newRollTarget.z);
+        Vector3 newRollTarget = GetRollTargetAngles();
+        newYAngle = Mathf.SmoothDampAngle(RollGameObject.transform.localEulerAngles.z, newRollTarget.z, ref yVelocity, rollSmooth);
+        RollGameObject.transform.localEulerAngles = new Vector3(newRollTarget.x, newRollTarget.y, newYAngle);
     }
 
     public void FireGun()
@@ -116,26 +118,29 @@ public class StarShip : MonoBehaviour
 		float angleOffset;
 
         velocityAngle = ShipRigidbody.velocity.normalized;
-        shipDirection = transform.position - StarShipTarget.transform.position;
+        shipDirection = Vector3.Normalize(transform.position - StarShipTarget.transform.position);
         angleOffset = UtilityFunctions.AngleFromAToB(velocityAngle, shipDirection);
 
 		if ((angleOffset > 0.0f && angleOffset < 180.0f))
         {
-			return new Vector3(0.0f, -(180 - Mathf.Abs(angleOffset)), 0.0f);
+			return new Vector3(0.0f, 0.0f, -(180 - Mathf.Abs(angleOffset)));
         }
 		else
         {
-			return new Vector3(0.0f, (180 - Mathf.Abs(angleOffset)), 0.0f);
+			return new Vector3(0.0f, 0.0f, (180 - Mathf.Abs(angleOffset)));
         }
 	}
 
 	void AddRotation()
 	{
 		Quaternion rotate;
-		
-		rotate = Quaternion.FromToRotation(Vector3.forward, StarShipTarget.transform.position - transform.position);
-        transform.localRotation = Quaternion.RotateTowards(transform.localRotation, rotate, TurnSpeed);
-        transform.localEulerAngles = new Vector3(0.0f, transform.localEulerAngles.y, 0.0f);
+
+        _targetPositionYZerodOut = new Vector3(StarShipTarget.transform.position.x, 0.0f, StarShipTarget.transform.position.z);
+        _positionYZerodOut = new Vector3(transform.position.x, 0.0f, transform.position.z);
+
+        rotate = Quaternion.FromToRotation(Vector3.forward, _targetPositionYZerodOut - _positionYZerodOut);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, rotate, TurnSpeed);
+        transform.eulerAngles = new Vector3(0.0f, transform.eulerAngles.y, 0.0f);
 	}
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
