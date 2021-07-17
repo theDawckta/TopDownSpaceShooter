@@ -55,9 +55,9 @@ public class StarShip : MonoBehaviour
 	{
         AddRotation();
 
-		Vector3 newRollTarget = GetRollTargetAngles();
-        newYAngle = Mathf.SmoothDampAngle(RollGameObject.transform.localEulerAngles.y, newRollTarget.y, ref yVelocity, rollSmooth);
-        RollGameObject.transform.localEulerAngles = new Vector3(newRollTarget.x, newYAngle, newRollTarget.z);
+		//Vector3 newRollTarget = GetRollTargetAngles();
+  //      newYAngle = Mathf.SmoothDampAngle(RollGameObject.transform.localEulerAngles.y, newRollTarget.y, ref yVelocity, rollSmooth);
+  //      RollGameObject.transform.localEulerAngles = new Vector3(newRollTarget.x, newYAngle, newRollTarget.z);
     }
 
     public void FireGun()
@@ -133,9 +133,9 @@ public class StarShip : MonoBehaviour
 	{
 		Quaternion rotate;
 		
-		rotate = Quaternion.FromToRotation(Vector3.up, StarShipTarget.transform.position - transform.position);
+		rotate = Quaternion.FromToRotation(Vector3.forward, StarShipTarget.transform.position - transform.position);
         transform.localRotation = Quaternion.RotateTowards(transform.localRotation, rotate, TurnSpeed);
-        transform.localEulerAngles = new Vector3(0.0f, 0.0f, transform.localEulerAngles.z);
+        transform.localEulerAngles = new Vector3(0.0f, transform.localEulerAngles.y, 0.0f);
 	}
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
