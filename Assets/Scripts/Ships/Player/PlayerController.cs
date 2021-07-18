@@ -36,9 +36,11 @@ public class PlayerController : StarShip
 
     protected override void FixedUpdate()
     {
-		StarShipTarget.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.farClipPlane));
+		var newTarget = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.farClipPlane));
+        StarShipTarget.transform.position = new Vector3(newTarget.x, 0f, newTarget.z);
 
-		if (Input.GetKey(KeyCode.W))
+
+        if (Input.GetKey(KeyCode.W))
             base.AddThrust(RearEngines);
         if (Input.GetKey(KeyCode.S))
             base.AddThrust(FrontEngines);

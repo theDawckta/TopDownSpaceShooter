@@ -30,7 +30,7 @@ public class StarShip : MonoBehaviour
     private Vector3 _targetPositionYZerodOut;
     private int barrelIndex = 0;
     private float yVelocity = 0.0f;
-    private float newYAngle = 0.0f;
+    private float newZAngle = 0.0f;
     private float _hitPoints = 0.0f;
 
     protected virtual void Awake()
@@ -58,8 +58,8 @@ public class StarShip : MonoBehaviour
         AddRotation();
 
         Vector3 newRollTarget = GetRollTargetAngles();
-        newYAngle = Mathf.SmoothDampAngle(RollGameObject.transform.localEulerAngles.z, newRollTarget.z, ref yVelocity, rollSmooth);
-        RollGameObject.transform.localEulerAngles = new Vector3(newRollTarget.x, newRollTarget.y, newYAngle);
+        newZAngle = Mathf.SmoothDampAngle(RollGameObject.transform.localEulerAngles.z, newRollTarget.z, ref yVelocity, rollSmooth);
+        RollGameObject.transform.localEulerAngles = new Vector3(newRollTarget.x, newRollTarget.y, newZAngle);
     }
 
     public void FireGun()
@@ -112,26 +112,26 @@ public class StarShip : MonoBehaviour
 	}
 
     private Vector3 GetRollTargetAngles()
-	{
-		Vector3 velocityAngle;
-        Vector2 shipDirection;
-		float angleOffset;
+    {
+        Vector3 velocityAngle;
+        Vector3 shipDirection;
+        float angleOffset;
 
         velocityAngle = ShipRigidbody.velocity.normalized;
-        shipDirection = Vector3.Normalize(transform.position - StarShipTarget.transform.position);
+        shipDirection = transform.position - StarShipTarget.transform.position;
         angleOffset = UtilityFunctions.AngleFromAToB(velocityAngle, shipDirection);
 
-		if ((angleOffset > 0.0f && angleOffset < 180.0f))
+        if ((angleOffset > 0.0f && angleOffset < 180.0f))
         {
-			return new Vector3(0.0f, 0.0f, -(180 - Mathf.Abs(angleOffset)));
+            return new Vector3(0.0f, 0.0f, (180 - Mathf.Abs(angleOffset)));
         }
-		else
+        else
         {
-			return new Vector3(0.0f, 0.0f, (180 - Mathf.Abs(angleOffset)));
+            return new Vector3(0.0f, 0.0f, -(180 - Mathf.Abs(angleOffset)));
         }
-	}
+    }
 
-	void AddRotation()
+    void AddRotation()
 	{
 		Quaternion rotate;
 
