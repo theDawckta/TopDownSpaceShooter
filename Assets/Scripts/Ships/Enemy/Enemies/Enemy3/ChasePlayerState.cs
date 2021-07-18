@@ -16,6 +16,6 @@ public class ChasePlayerState : FSMState
     public override void Act(StarShip player, StarShip npc)
     {
         npc.StarShipTarget.transform.position = player.transform.position + (player.transform.up * player.ShipRigidbody.velocity.magnitude);
-        npc.AddThrust(npc.transform.up);
+        npc.AddThrust(npc.transform.forward);
     }
 }
