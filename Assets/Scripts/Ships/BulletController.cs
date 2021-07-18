@@ -11,15 +11,15 @@ public class BulletController : MonoBehaviour
     public GameObject Shooter;
 
     private Vector3 originalPosition;
-    private Rigidbody2D bulletRigidbody;
+    private Rigidbody bulletRigidbody;
     private MeshRenderer bulletMeshRenderer;
 
     void Start()
     {
         originalPosition = transform.position;
-        bulletRigidbody = transform.GetComponent<Rigidbody2D>();
+        bulletRigidbody = transform.GetComponent<Rigidbody>();
         bulletMeshRenderer = transform.GetComponent<MeshRenderer>();
-        bulletRigidbody.AddForce(transform.up * Speed, ForceMode2D.Impulse);
+        bulletRigidbody.AddForce(transform.up * Speed);
     }
 
     void FixedUpdate()
@@ -34,7 +34,7 @@ public class BulletController : MonoBehaviour
     {
         if (collision.collider.gameObject.layer != gameObject.layer)
         {
-            bulletRigidbody.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
+            bulletRigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
             bulletMeshRenderer.enabled = false;
             gameObject.GetComponent<Collider2D>().enabled = false;
             
