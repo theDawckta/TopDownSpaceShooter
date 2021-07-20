@@ -19,7 +19,7 @@ public class AttackPlayerState : FSMState
 
     public override void Act(StarShip player, StarShip npc)
     {
-        npc.StarShipTarget.transform.position = player.transform.position;
+        npc.StarShipDestTarget.transform.position = player.transform.position;
         npc.FireGun();
     }
 }

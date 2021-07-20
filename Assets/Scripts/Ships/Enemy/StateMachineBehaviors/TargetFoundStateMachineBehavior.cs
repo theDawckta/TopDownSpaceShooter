@@ -25,12 +25,12 @@ public class TargetFoundStateMachineBehavior : StateMachineBehaviour
             {
                 animator.SetTrigger("TargetLost");
                 Debug.DrawRay(enemy.transform.position, enemy.CurrentTarget.transform.position - enemy.transform.position * hit.distance, Color.yellow, 10f);
-                Debug.Log("LOST LINE OF SITE");
+                //Debug.Log("LOST LINE OF SITE");
             }
             else
             {
                 Debug.DrawRay(enemy.transform.position, enemy.CurrentTarget.transform.position - enemy.transform.position * 1000, Color.white, 10f);
-                Debug.Log("HAS LINE OF SITE");
+                //Debug.Log("HAS LINE OF SITE");
             }
         }
     }

@@ -39,7 +39,7 @@ public class PlayerController : StarShip
     protected override void FixedUpdate()
     {
 		var newTarget = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.farClipPlane));
-        StarShipTarget.transform.position = new Vector3(newTarget.x, 0f, newTarget.z);
+        StarShipDestTarget.transform.position = new Vector3(newTarget.x, 0f, newTarget.z);
 
         AddRotation();
 
@@ -58,7 +58,7 @@ public class PlayerController : StarShip
     {
         Quaternion rotate;
 
-        _targetPositionYZerodOut = new Vector3(StarShipTarget.transform.position.x, 0.0f, StarShipTarget.transform.position.z);
+        _targetPositionYZerodOut = new Vector3(StarShipDestTarget.transform.position.x, 0.0f, StarShipDestTarget.transform.position.z);
         _positionYZerodOut = new Vector3(transform.position.x, 0.0f, transform.position.z);
 
         rotate = Quaternion.FromToRotation(Vector3.forward, _targetPositionYZerodOut - _positionYZerodOut);
@@ -66,7 +66,7 @@ public class PlayerController : StarShip
         transform.eulerAngles = new Vector3(0.0f, transform.eulerAngles.y, 0.0f);
     }
 
-    protected override void OnCollisionEnter2D(Collision2D collision)
+    protected override void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
@@ -74,7 +74,7 @@ public class PlayerController : StarShip
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
-        base.OnCollisionEnter2D(collision);
+        base.OnCollisionEnter(collision);
     }
 
 	void OnTriggerEnter2D(Collider2D collider)

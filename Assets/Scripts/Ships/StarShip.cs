@@ -24,7 +24,7 @@ public class StarShip : MonoBehaviour
     [HideInInspector]
     public bool Firing = false;
     [HideInInspector]
-    public GameObject StarShipTarget;
+    public GameObject StarShipDestTarget;
 
     private int barrelIndex = 0;
     private float yVelocity = 0.0f;
@@ -35,9 +35,12 @@ public class StarShip : MonoBehaviour
 	{
 		ShipRigidbody = transform.GetComponent<Rigidbody>();
         ShipCollider = transform.GetComponent<Collider>();
-        StarShipTarget = new GameObject();
-        StarShipTarget.name = "StarShipTarget";
-        StarShipTarget.transform.parent = this.transform;
+        StarShipDestTarget = new GameObject();
+        StarShipDestTarget.SetActive(false);
+        StarShipDestTarget.name = "StarShipDestTarget";
+        StarShipDestTarget.AddComponent<BoxCollider>().isTrigger = true;
+        StarShipDestTarget.transform.SetParent(transform, false);
+        StarShipDestTarget.transform.localScale = Vector3.one;
         _hitPoints = HitPoints;
     }
 
@@ -114,7 +117,7 @@ public class StarShip : MonoBehaviour
         float angleOffset;
 
         velocityAngle = ShipRigidbody.velocity.normalized;
-        shipDirection = transform.position - StarShipTarget.transform.position;
+        shipDirection = transform.position - StarShipDestTarget.transform.position;
         angleOffset = UtilityFunctions.AngleFromAToB(velocityAngle, shipDirection);
 
         if ((angleOffset > 0.0f && angleOffset < 180.0f))
@@ -127,7 +130,12 @@ public class StarShip : MonoBehaviour
         }
     }
 
-    protected virtual void OnCollisionEnter2D(Collision2D collision)
+    protected virtual void OnTriggerEnter(Collider other)
+    {
+        //Debug.Log("TRIGGER COLLISION " + other.name );
+    }
+
+    protected virtual void OnCollisionEnter(Collision collision)
     {
         BulletController bullet;
 
@@ -150,12 +158,12 @@ public class StarShip : MonoBehaviour
     IEnumerator TransitionTarget(float time, Vector3 newPosition)
     {
         float t = 0.0f;
-        Vector3 startingPos = StarShipTarget.transform.position;
+        Vector3 startingPos = StarShipDestTarget.transform.position;
         while (t < time)
         {
             t += Time.deltaTime * (Time.timeScale / time);
-            StarShipTarget.transform.position = Vector3.Lerp(startingPos, newPosition, t);
-            Debug.DrawLine(startingPos, StarShipTarget.transform.position, Color.red);
+            StarShipDestTarget.transform.position = Vector3.Lerp(startingPos, newPosition, t);
+            Debug.DrawLine(startingPos, StarShipDestTarget.transform.position, Color.red);
             yield return 0;
         }
     }

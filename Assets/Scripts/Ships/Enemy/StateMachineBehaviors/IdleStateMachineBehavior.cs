@@ -11,11 +11,17 @@ public class IdleStateMachineBehavior : StateMachineBehaviour
 
         if (enemy != null)
         {
-            Debug.Log("ENEMY3 DISTANCE TO CURRENT TARGET: " + Vector3.Distance(enemy.transform.position, enemy.CurrentTarget.transform.position));
-            if (Vector3.Distance(enemy.transform.position, enemy.CurrentTarget.transform.position) >= 20)
+            if (Vector3.Distance(enemy.transform.position, enemy.CurrentTarget.transform.position) >= 20f)
+            {
+                //Debug.Log("TARGET IS LOST");
                 animator.SetTrigger("TargetLost");
-            if (Vector3.Distance(enemy.transform.position, enemy.CurrentTarget.transform.position) < 20)
+            }
+                
+            if (Vector3.Distance(enemy.transform.position, enemy.CurrentTarget.transform.position) < 20f)
+            {
+                //Debug.Log("TARGET IS FOUND");
                 animator.SetTrigger("TargetFound");
+            } 
         }
         else
         {

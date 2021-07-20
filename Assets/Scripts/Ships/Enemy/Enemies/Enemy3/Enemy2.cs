@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 public class Enemy2 : StarShip
 {
-    public GameObject TestTarget;
     public Animator Enemy2Animator { get { return _enemy2Animator; } private set { } }
     public NavMeshAgent Enemy2NavMeshAgent { get { return _navMeshAgent; } private set { } }
     public StarShip CurrentTarget { get { return _currentTarget; } private set { } }
@@ -43,16 +42,29 @@ public class Enemy2 : StarShip
         base.FixedUpdate();
     }
 
-    public void GotoTarget(Vector3 position)
+    protected override void OnTriggerEnter(Collider other)
     {
-        _navMeshAgent.SetDestination(position);
-        TestTarget.transform.parent = null;
-        TestTarget.transform.position = position;
+        if(other.transform == StarShipDestTarget.transform)
+        {
+            _navMeshAgent.ResetPath();
+            StarShipDestTarget.SetActive(false);
+            StarShipDestTarget.transform.SetParent(transform, false);
+            StarShipDestTarget.transform.localScale = Vector3.one;
+            _enemy2Animator.SetTrigger("ArrivedAtPathEnd");
+            //Debug.Log("ARRIVED AT END OF PATH");
+        }
+
+        base.OnTriggerEnter(other);
     }
 
-    public void ArrivedAtTarget()
+    public void GotoTarget(Vector3 newPosition)
     {
-        TestTarget.transform.SetParent(transform);
+        Vector3 yNormalizedPosition = new Vector3(newPosition.x, transform.position.y, newPosition.z);
+
+        _navMeshAgent.SetDestination(yNormalizedPosition);
+        StarShipDestTarget.transform.parent = null;
+        StarShipDestTarget.transform.position = yNormalizedPosition;
+        StarShipDestTarget.SetActive(true);
     }
 
     void EnemyDied(StarShip ship)

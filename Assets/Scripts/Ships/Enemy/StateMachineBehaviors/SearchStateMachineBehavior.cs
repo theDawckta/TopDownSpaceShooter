@@ -12,6 +12,7 @@ public class SearchStateMachineBehavior : StateMachineBehaviour
         if (enemy != null && enemy.CurrentTarget != null)
         {
             enemy.GotoTarget(enemy.CurrentTarget.transform.position);
+            //Debug.Log("NEW GOTO TARGET");
         }
         else
         {
@@ -20,23 +21,10 @@ public class SearchStateMachineBehavior : StateMachineBehaviour
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        Enemy2 enemy = animator.GetComponent<Enemy2>();
+    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
 
-        if (!enemy.Enemy2NavMeshAgent.pathPending)
-        {
-            if (enemy.Enemy2NavMeshAgent.remainingDistance <= enemy.Enemy2NavMeshAgent.stoppingDistance)
-            {
-                if (!enemy.Enemy2NavMeshAgent.hasPath || enemy.Enemy2NavMeshAgent.velocity.sqrMagnitude == 0f)
-                {
-                    Debug.Log("ARRIVED AT END OF PATH");
-                    enemy.ArrivedAtTarget();
-                    enemy.Enemy2Animator.SetTrigger("ArrivedAtPathEnd");
-                }
-            }
-        }
-    }
+    //}
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
