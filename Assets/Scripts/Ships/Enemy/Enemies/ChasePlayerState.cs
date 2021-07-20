@@ -9,7 +9,7 @@ public class ChasePlayerState : FSMState
 
     public override void Reason(StarShip player, StarShip npc)
     {
-        if (Vector3.Distance(npc.transform.position, player.transform.position) <= 40)
+        if (Vector3.Distance(npc.transform.position, player.transform.position) <= 20)
             npc.GetComponent<Enemy3>().SetTransition(Transition.PlayerInRange);
     }
 

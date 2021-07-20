@@ -26,8 +26,6 @@ public class StarShip : MonoBehaviour
     [HideInInspector]
     public GameObject StarShipTarget;
 
-    private Vector3 _positionYZerodOut;
-    private Vector3 _targetPositionYZerodOut;
     private int barrelIndex = 0;
     private float yVelocity = 0.0f;
     private float newZAngle = 0.0f;
@@ -43,7 +41,7 @@ public class StarShip : MonoBehaviour
         _hitPoints = HitPoints;
     }
 
-    protected virtual void Start () 
+    protected virtual void Start() 
 	{
 		
 	}
@@ -55,8 +53,6 @@ public class StarShip : MonoBehaviour
 
 	protected virtual void FixedUpdate()
 	{
-        AddRotation();
-
         Vector3 newRollTarget = GetRollTargetAngles();
         newZAngle = Mathf.SmoothDampAngle(RollGameObject.transform.localEulerAngles.z, newRollTarget.z, ref yVelocity, rollSmooth);
         RollGameObject.transform.localEulerAngles = new Vector3(newRollTarget.x, newRollTarget.y, newZAngle);
@@ -130,18 +126,6 @@ public class StarShip : MonoBehaviour
             return new Vector3(0.0f, 0.0f, -(180 - Mathf.Abs(angleOffset)));
         }
     }
-
-    void AddRotation()
-	{
-		Quaternion rotate;
-
-        _targetPositionYZerodOut = new Vector3(StarShipTarget.transform.position.x, 0.0f, StarShipTarget.transform.position.z);
-        _positionYZerodOut = new Vector3(transform.position.x, 0.0f, transform.position.z);
-
-        rotate = Quaternion.FromToRotation(Vector3.forward, _targetPositionYZerodOut - _positionYZerodOut);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, rotate, TurnSpeed);
-        transform.eulerAngles = new Vector3(0.0f, transform.eulerAngles.y, 0.0f);
-	}
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {

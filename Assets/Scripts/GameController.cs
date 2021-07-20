@@ -6,6 +6,7 @@ public class GameController : MonoBehaviour
 {
     public PlayerController Player;
     public UIController UI;
+    public Enemy2 Enemy2;
 
     private EnemySpawnController _enemySpawnController;
     private DropController _dropController;
@@ -15,6 +16,12 @@ public class GameController : MonoBehaviour
         _enemySpawnController = gameObject.GetComponent<EnemySpawnController>();
         _dropController = gameObject.GetComponent<DropController>();
         
+    }
+
+    void Start()
+    {
+        if (Enemy2 != null)
+            Enemy2.gameObject.SetActive(true);
     }
 
     void Update () 
