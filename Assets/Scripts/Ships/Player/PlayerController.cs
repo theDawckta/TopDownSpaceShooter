@@ -28,6 +28,14 @@ public class PlayerController : StarShip
         base.Awake();
     }
 
+    protected override void Start()
+    {
+        if(StarShipAnimator != null)
+            StarShipAnimator.enabled = false;
+        if(StarShipNavMeshAgent != null)
+            StarShipNavMeshAgent.enabled = false;
+    }
+
     protected override void Update()
     {
         if (Input.GetButton("Fire1"))
